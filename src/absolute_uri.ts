@@ -3,10 +3,8 @@
 import { NumberUtils } from "@i-xi-dev/fundamental";
 import { toUnicode } from "punycode";
 
-/**
- * 特別スキーム
- */
-const SpecialScheme = {
+const Scheme = {
+  BLOB: "blob",
   FILE: "file",
   FTP: "ftp",
   HTTP: "http",
@@ -19,37 +17,208 @@ const SpecialScheme = {
  * デフォルトポート
  */
 const DefaultPortMap: Map<string, number> = new Map([
-  [ SpecialScheme.FILE, Number.NaN ],
-  [ SpecialScheme.FTP, 21 ],
-  [ SpecialScheme.HTTP, 80 ],
-  [ SpecialScheme.HTTPS, 443 ],
-  [ SpecialScheme.WS, 80 ],
-  [ SpecialScheme.WSS, 443 ],
+  [ Scheme.FILE, -1 ],
+  [ Scheme.FTP, 21 ],
+  [ Scheme.HTTP, 80 ],
+  [ Scheme.HTTPS, 443 ],
+  [ Scheme.WS, 80 ],
+  [ Scheme.WSS, 443 ],
 ]);
 
 /**
- * URI文字列が絶対URIを表しているか否かを返却
- * 
- * @param uriString URI文字列
- * @param scheme スキーム
- * @returns URI文字列が絶対URIを表しているか否か
- */
-function isAbsoluteUrl(uriString: string, scheme: string): boolean {
-  let separator = ":";
-  if ((Object.values(SpecialScheme) as Array<string>).includes(scheme)) {
-    separator = "://";
-  }
-  return uriString.toLowerCase().startsWith(scheme + separator);
-}
-
-/**
- * Absolute URL
+ * The normalized absolute URL
  * 
  * Instances of this class are immutable.
  * 
  * @see [URL Standard](https://url.spec.whatwg.org/)
  */
 class AbsoluteUri {
+  #value: URL;
+
+  private constructor(value: URL) {
+    this.#value = value;
+    Object.freeze(this);
+  }
+
+  static fromString(str: string): AbsoluteUri {
+    
+  }
+
+  static fromURL(url: URL): AbsoluteUri {
+    return new AbsoluteUri(new URL(url.toString()));
+  }
+
+  static from(src: string | URL): AbsoluteUri {
+    if (src instanceof URL) {
+      return AbsoluteUri.fromURL(src);
+    }
+    else if (typeof src === "string") {
+      return AbsoluteUri.fromString(src);
+    }
+    throw new TypeError("src");
+  }
+
+  /**
+   * Gets the scheme name for this instance.
+   */
+  get scheme(): string {
+    return this.#value.protocol.replace(/:$/, "");
+  }
+
+  get rawUsername(): string {
+
+  }
+
+  get username(): string {
+
+  }
+
+  get rawPassword() {
+
+  }
+
+  get password() {
+
+  }
+
+  /**
+   * Gets the host for this instance.
+   */
+  get rawHost(): string {
+    return this.#value.hostname;
+  }
+
+  /**
+   * Gets the decoded host for this instance.
+   */
+  get host(): string {
+    throw new Error("not implemented");
+  }
+
+  /**
+   * Gets the port number for this instance.
+   */
+  get port(): number {
+    const specifiedString = this.#value.port;
+    if (specifiedString.length > 0) {
+      return Number.parseInt(specifiedString, 10);
+    }
+
+    const defaultPort = DefaultPortMap.get(this.scheme);
+    if ((typeof defaultPort === "number") && NumberUtils.isNonNegativeInteger(defaultPort)) {
+      return defaultPort;
+    }
+    return -1;
+  }
+
+  get rawPath(): string {
+
+  }
+
+  get path() {
+
+  }
+
+  get query(): string {
+    
+  }
+
+  get query() {
+    
+  }
+
+  /**
+   * Gets the fragment for this instance.
+   */
+  get rawFragment(): string {
+    return this.#value.hash.replace(/^#/, "");
+  }
+
+  /**
+   * Gets the decoded fragment for this instance.
+   */
+  get fragment(): string {
+    return globalThis.decodeURIComponent(this.rawFragment);
+  }
+
+  /**
+   * Gets the origin for this instance.
+   */
+  get origin(): string | null {
+    switch (this.scheme) {
+      case Scheme.BLOB:
+      case Scheme.FTP:
+      case Scheme.HTTP:
+      case Scheme.HTTPS:
+      case Scheme.WS:
+      case Scheme.WSS:
+        return this.#value.origin;
+      default:
+        return null;
+        // fileスキームの場合に不透明なoriginとするかはブラウザによっても違う（たとえばChromeは"file://", Firefoxは"null"）。一括不透明とする
+    }
+  }
+
+  /**
+   * @override
+   * @returns The normalized string representation for this instance.
+   */
+  toString(): string {
+    return this.#value.toString();
+  }
+
+  /**
+   * @returns The normalized string representation for this instance.
+   */
+  toJSON(): string {
+    return this.toString();
+  }
+
+  equals(): boolean {
+
+  }
+
+  relativize() {
+
+  }
+
+  resolve() {
+
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// /**
+//  * URI文字列が絶対URIを表しているか否かを返却
+//  * 
+//  * @param uriString URI文字列
+//  * @param scheme スキーム
+//  * @returns URI文字列が絶対URIを表しているか否か
+//  */
+// function isAbsoluteUrl(uriString: string, scheme: string): boolean {
+//   let separator = ":";
+//   if ((Object.values(SpecialScheme) as Array<string>).includes(scheme)) {
+//     separator = "://";
+//   }
+//   return uriString.toLowerCase().startsWith(scheme + separator);
+// }
+
+type QueryEntry = [ name: string, value: string ];
+
+class xAbsoluteUri {
   #value: URL;
 
   /**
@@ -81,20 +250,6 @@ class AbsoluteUri {
     Object.freeze(this);
   }
 
-  /**
-   * Gets the scheme name for this instance.
-   */
-  get scheme(): string {
-    return this.#value.protocol.replace(/:$/, "");
-  }
-
-  /**
-   * Gets the host for this instance.
-   */
-  get encodedHost(): string | null {
-    return (this.#value.hostname.length <= 0) ? null : this.#value.hostname;
-  }
-
   get host(): string | null {
     const encodedHost = this.encodedHost;
     if (encodedHost) {
@@ -103,36 +258,12 @@ class AbsoluteUri {
     return null;
   }
 
-  /**
-   * Gets the port number for this instance.
-   */
-  get port(): number | null {
-    const specifiedString = this.#value.port;
-    if (specifiedString.length > 0) {
-      return Number.parseInt(specifiedString, 10);
-    }
-
-    const defaultPort = DefaultPortMap.get(this.scheme);
-    if ((typeof defaultPort === "number") && NumberUtils.isNonNegativeInteger(defaultPort)) {
-      return defaultPort;
-    }
-    return null;
-  }
-
-  /**
-   * Gets the origin for this instance.
-   */
-  get origin(): string | null {
-    return (this.#value.origin === "null") ? null : this.#value.origin;
-  }
-  // XXX Chromeがfileスキームの場合nullを返さない
-
   // TODO get path(): Array<string> {
 
   /**
    * クエリ
    */
-  get query(): Array<[ string, string ]> | null {
+  get query(): Array<QueryEntry> | null {
     if (this.#value.search.length <= 0) {
       const work = new URL(this.#value.toString());
       work.hash = "";
@@ -142,7 +273,7 @@ class AbsoluteUri {
       return null;
     }
 
-    const entries: Array<[ string, string ]> = [];
+    const entries: Array<QueryEntry> = [];
     for (const entry of this.#value.searchParams.entries()) {
       entries.push([
         entry[0],
@@ -150,37 +281,6 @@ class AbsoluteUri {
       ]);
     }
     return entries;
-  }
-
-  /**
-   * Gets the fragment for this instance.
-   */
-  get fragment(): string | null {
-    if (this.#value.hash.length <= 0) {
-      const work = new URL(this.#value.toString());
-      if (work.toString().endsWith("#")) {
-        return "";
-      }
-      return null;
-    }
-
-    const fragment = this.#value.hash.replace(/^#/, "");
-    return globalThis.decodeURIComponent(fragment);
-  }
-
-  /**
-   * @override
-   * @returns The normalized string representation for this instance.
-   */
-  toString(): string {
-    return this.#value.toString();
-  }
-
-  /**
-   * @returns The normalized string representation for this instance.
-   */
-  toJSON(): string {
-    return this.toString();
   }
 
   // XXX resolveRelativeUri(relativeUriString: string): Uri {
@@ -194,7 +294,7 @@ class AbsoluteUri {
    * @param query クエリパラメーターのエントリー配列
    * @returns 生成したインスタンス
    */
-  withQuery(query: Array<[ string, string ]>): AbsoluteUri {
+  withQuery(query: Array<QueryEntry>): AbsoluteUri {
     const queryParams = new URLSearchParams(query);
     const work = new URL(this.#value.toString());
     work.search = "?" + queryParams.toString();
