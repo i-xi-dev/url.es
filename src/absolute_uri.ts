@@ -17,7 +17,6 @@ const Scheme = {
  * デフォルトポート
  */
 const DefaultPortMap: Map<string, number> = new Map([
-  [ Scheme.FILE, -1 ],
   [ Scheme.FTP, 21 ],
   [ Scheme.HTTP, 80 ],
   [ Scheme.HTTPS, 443 ],
@@ -26,6 +25,21 @@ const DefaultPortMap: Map<string, number> = new Map([
 ]);
 
 type QueryEntry = [ name: string, value: string ];
+
+function isQueryEntry(value: unknown): value is QueryEntry {
+  if (Array.isArray(value)) {
+    const unknownArray = value as Array<unknown>;
+    if (unknownArray.length !== 2) {
+      return false;
+    }
+    if (unknownArray.every((i) => typeof i === "string") !== true) {
+      return false;
+    }
+    const stringArray = unknownArray as [ string, string ];
+    return (stringArray[0].length > 0);
+  }
+  return false;
+}
 
 /**
  * The normalized absolute URL
@@ -38,12 +52,21 @@ class AbsoluteUri {
   #normalizedUri: URL;
 
   private constructor(uri: URL) {
+    // searchが"?"のみの場合、ブラウザによってはgetterでは""になるのに、実際は"?"だけ残るので統一する
+    if (uri.search === "?") {
+      uri.search = "";
+    }
+    // hashが"#"のみの場合、ブラウザによってはgetterでは""になるのに、実際は"#"だけ残るので統一する
+    if (uri.hash === "#") {
+      uri.hash = "";
+    }
+
     this.#normalizedUri = uri;
     Object.freeze(this);
   }
 
   /**
-   * Parses a string representation of an absolute URL.
+   * Creates a new `AbsoluteUri` instance from the specified string representation of an absolute URL.
    * 
    * @param value - A string representing an absolute URL.
    * @returns A `AbsoluteUri` instance.
@@ -51,6 +74,17 @@ class AbsoluteUri {
    */
   static fromString(str: string): AbsoluteUri {
     const value = new URL(str); // URLでなければエラー、加えて最近の実装は相対URLの場合もエラー
+    return new AbsoluteUri(value);
+  }
+
+  /**
+   * Creates a new `AbsoluteUri` instance from the specified `URL`.
+   * 
+   * @param value - A URL.
+   * @returns A `AbsoluteUri` instance.
+   */
+  static fromURL(url: URL): AbsoluteUri {
+    const value = new URL(url.toString());
     return new AbsoluteUri(value);
   }
 
@@ -100,7 +134,11 @@ class AbsoluteUri {
    * Gets the decoded host for this instance.
    */
   get host(): string {
-    throw new Error("not implemented");
+    const rawHost = this.rawHost;
+    if (rawHost) {
+      return toUnicode(rawHost);
+    }
+    return "";
   }
 
   /**
@@ -116,7 +154,7 @@ class AbsoluteUri {
     if ((typeof defaultPort === "number") && NumberUtils.isNonNegativeInteger(defaultPort)) {
       return defaultPort;
     }
-    return -1;
+    return Number.NaN;
   }
 
   /**
@@ -126,12 +164,12 @@ class AbsoluteUri {
     return this.#normalizedUri.pathname;
   }
 
-  /**
-   * Gets the path segments for this instance.
-   */
-  get path() {
-    throw new Error("not implemented");
-  }
+  // /**
+  //  * Gets the path segments for this instance.
+  //  */
+  // get path() {
+  //   throw new Error("not implemented");
+  // }
 
   /**
    * Gets the query for this instance.
@@ -171,17 +209,17 @@ class AbsoluteUri {
   /**
    * Gets the origin for this instance.
    */
-  get origin(): string | null {
+  get origin(): string {
     switch (this.scheme) {
-      case Scheme.BLOB:
-      case Scheme.FTP:
-      case Scheme.HTTP:
-      case Scheme.HTTPS:
-      case Scheme.WS:
-      case Scheme.WSS:
-        return this.#normalizedUri.origin;
-      default:
-        return null;
+    case Scheme.BLOB:
+    case Scheme.FTP:
+    case Scheme.HTTP:
+    case Scheme.HTTPS:
+    case Scheme.WS:
+    case Scheme.WSS:
+      return this.#normalizedUri.origin;
+    default:
+      return "null";
         // fileスキームの場合に不透明なoriginとするかはブラウザによっても違う（たとえばChromeは"file://", Firefoxは"null"）。一括不透明とする
     }
   }
@@ -201,23 +239,55 @@ class AbsoluteUri {
     return this.toString();
   }
 
-  #toURL(): URL {
+  /**
+   * @returns The `URL` object.
+   */
+  toURL(): URL {
     return new URL(this.#normalizedUri.toString());
   }
 
   equals(): boolean {
-
+    throw new Error("not implemented");
   }
 
-  relativize() {
+  // relativize(relativePath: string): string {
+  // }
 
+  // resolve(relativeUri: string): AbsoluteUri {
+  // }
+
+  withPath(): AbsoluteUri {
+    throw new Error("not implemented");
   }
 
-  resolve() {
-
+  /**
+   * Return a new `AbsoluteUri` instance with the query set.
+   * 
+   * @param query クエリパラメーターのエントリー配列
+   * @returns 生成したインスタンス
+   */
+  withQuery(query: Array<QueryEntry>): AbsoluteUri {
+    const work = this.toURL();
+    if (Array.isArray(query) && query.every((entry) => isQueryEntry(entry)) && (query.length > 0)) {
+      const queryParams = new URLSearchParams(query);
+      work.search = "?" + queryParams.toString();
+    }
+    else {
+      work.search = "";
+    }
+    return new AbsoluteUri(work);
   }
 
-
+  /**
+   * Returns a new `AbsoluteUri` instance with the query removed.
+   * 
+   * @returns A new `AbsoluteUri` instance.
+   */
+  withoutQuery(): AbsoluteUri {
+    const work = this.toURL();
+    work.search = "";
+    return new AbsoluteUri(work);
+  }
 
   /**
    * Return a new `AbsoluteUri` instance with the fragment set.
@@ -225,8 +295,8 @@ class AbsoluteUri {
    * @param fragment - The fragment. No need to prepend a `"#"` to fragment.
    * @returns A new `AbsoluteUri` instance.
    */
-   withFragment(fragment: string): AbsoluteUri {
-    const work = this.#toURL();
+  withFragment(fragment: string): AbsoluteUri {
+    const work = this.toURL();
     if ((typeof fragment === "string") && (fragment.length > 0)) {
       work.hash = "#" + fragment; // 0x20,0x22,0x3C,0x3E,0x60 の%エンコードは自動でやってくれる
     }
@@ -242,70 +312,10 @@ class AbsoluteUri {
    * @returns A new `AbsoluteUri` instance.
    */
   withoutFragment(): AbsoluteUri {
-    const work = this.#toURL();
+    const work = this.toURL();
     work.hash = "";
     return new AbsoluteUri(work);
   }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-class xAbsoluteUri {
-  #value: URL;
-
-
-  get host(): string | null {
-    const encodedHost = this.encodedHost;
-    if (encodedHost) {
-      return toUnicode(encodedHost);
-    }
-    return null;
-  }
-
-  // TODO get path(): Array<string> {
-
-
-  /**
-   * 自身のURIと指定したクエリで新たなインスタンスを生成し返却
-   * 
-   * ※空の配列をセットした場合の挙動はURL.searchに空文字列をセットした場合の挙動に合わせた
-   *   （toStringした結果は末尾"?[素片]"となる。"?"を取り除きたい場合はwithoutQueryすべし）
-   * 
-   * @param query クエリパラメーターのエントリー配列
-   * @returns 生成したインスタンス
-   */
-  withQuery(query: Array<QueryEntry>): AbsoluteUri {
-    const queryParams = new URLSearchParams(query);
-    const work = new URL(this.#value.toString());
-    work.search = "?" + queryParams.toString();
-    // XXX Chromeが"?"のみの場合""にしてしまう
-    return new AbsoluteUri(work.toString());
-  }
-
-  /**
-   * 自身のURIからクエリを除いた新たなインスタンスを生成し返却
-   * 
-   * @returns 生成したインスタンス
-   */
-  withoutQuery(): AbsoluteUri {
-    const work = new URL(this.#value.toString());
-    work.search = "";
-    return new AbsoluteUri(work.toString());
-  }
-
 }
 Object.freeze(AbsoluteUri);
 
