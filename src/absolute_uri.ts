@@ -1,6 +1,7 @@
 //
 
 import { NumberUtils } from "@i-xi-dev/fundamental";
+import { ByteSequence } from "@i-xi-dev/bytes";
 import { toUnicode } from "punycode";
 
 const Scheme = {
@@ -106,7 +107,7 @@ class AbsoluteUri {
   //  * Gets the decoded username for this instance.
   //  */
   // get username(): string {
-  //   return globalThis.decodeURIComponent(this.rawUsername);
+  //   return globalThis.decodeURIComponent(this.rawUsername); おそらくURIErrorになる場合がある
   // }
 
   // /**
@@ -120,7 +121,7 @@ class AbsoluteUri {
   //  * Gets the decoded password for this instance.
   //  */
   // get password() {
-  //   return globalThis.decodeURIComponent(this.rawPassword);
+  //   return globalThis.decodeURIComponent(this.rawPassword); おそらくURIErrorになる場合がある
   // }
 
   /**
@@ -203,7 +204,8 @@ class AbsoluteUri {
    * Gets the decoded fragment for this instance.
    */
   get fragment(): string {
-    return globalThis.decodeURIComponent(this.rawFragment);
+    // return globalThis.decodeURIComponent(this.rawFragment); URIErrorになる場合がある
+    return ByteSequence.fromPercentEncoded(this.rawFragment).utf8DecodeTo();
   }
 
   /**
