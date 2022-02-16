@@ -351,6 +351,7 @@ describe("AbsoluteUri.prototype.origin", () => {
     assert.strictEqual(AbsoluteUri.fromString("tel:aaaa").origin, "null");
     assert.strictEqual(AbsoluteUri.fromString("urn:ietf:rfc:2648").origin, "null");
     assert.strictEqual(AbsoluteUri.fromString("geo:13.4125,103.8667").origin, "null");
+    assert.strictEqual(AbsoluteUri.fromString("about:blank").origin, "null");
 
   });
 
@@ -376,10 +377,10 @@ describe("AbsoluteUri.prototype.toString", () => {
     assert.strictEqual(u5.toString(), "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6");
     assert.strictEqual(u6.toString(), "data:,Hello%2C%20World!");
 
-    assert.strictEqual(AbsoluteUri.fromString("http://example.com:80/hoge?").toString(), "http://example.com/hoge?");
+    assert.strictEqual(AbsoluteUri.fromString("http://example.com:80/hoge?").toString(), "http://example.com/hoge");
     assert.strictEqual(AbsoluteUri.fromString("http://example.com:80/hoge?foo").toString(), "http://example.com/hoge?foo");
     assert.strictEqual(AbsoluteUri.fromString("http://example.com:80/hoge?foo=5").toString(), "http://example.com/hoge?foo=5");
-    assert.strictEqual(AbsoluteUri.fromString("http://example.com:80/hoge#").toString(), "http://example.com/hoge#");
+    assert.strictEqual(AbsoluteUri.fromString("http://example.com:80/hoge#").toString(), "http://example.com/hoge");
     assert.strictEqual(AbsoluteUri.fromString("http://example.com:80/hoge#f<o>o").toString(), "http://example.com/hoge#f%3Co%3Eo");
     assert.strictEqual(AbsoluteUri.fromString("http://example.com:80/hoge#foo#5").toString(), "http://example.com/hoge#foo#5");
     assert.strictEqual(AbsoluteUri.fromString("http://example.com/hoge").toString(), "http://example.com/hoge");
@@ -416,18 +417,148 @@ describe("AbsoluteUri.prototype.toURL", () => {
 
 describe("AbsoluteUri.prototype.originEquals", () => {
   it("originEquals(AbsoluteUri)", () => {
+    const u0 = AbsoluteUri.fromString("http://example.com:8080/");
+    const u0b = AbsoluteUri.fromString("Http://example.COM:8080/");
+    const u1 = AbsoluteUri.fromString("http://example.com:80/hoge");
+    const u2 = AbsoluteUri.fromString("https://example.com:80/hoge");
+    const u3 = AbsoluteUri.fromString("file:///D:/hoge/index.txt");
+    const u4 = AbsoluteUri.fromString("blob:https://whatwg.org/d0360e2f-caee-469f-9a2f-87d5b0456f6f");
+    const u5 = AbsoluteUri.fromString("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6");
+    const u6 = AbsoluteUri.fromString("data:,Hello%2C%20World!");
+
+    assert.strictEqual(u0.originEquals(u0), true);
+    assert.strictEqual(u0.originEquals(u0b), true);
+    assert.strictEqual(u0b.originEquals(u1), false);
+    assert.strictEqual(u1.originEquals(u2), false);
+    assert.strictEqual(u2.originEquals(u3), false);
+    assert.strictEqual(u3.originEquals(u3), false);
+    assert.strictEqual(AbsoluteUri.fromString("https://whatwg.org/hoge").originEquals(u4), true);
+    assert.strictEqual(u5.originEquals(u6), false);
+    assert.strictEqual(u6.originEquals(u6), false);
 
   });
 
   it("originEquals(URL)", () => {
+    const u0 = AbsoluteUri.fromString("http://example.com:8080/");
+    const u0b = AbsoluteUri.fromString("Http://example.COM:8080/");
+    const u1 = AbsoluteUri.fromString("http://example.com:80/hoge");
+    const u2 = AbsoluteUri.fromString("https://example.com:80/hoge");
+    const u3 = AbsoluteUri.fromString("file:///D:/hoge/index.txt");
+    const u4 = AbsoluteUri.fromString("blob:https://whatwg.org/d0360e2f-caee-469f-9a2f-87d5b0456f6f");
+    const u5 = AbsoluteUri.fromString("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6");
+    const u6 = AbsoluteUri.fromString("data:,Hello%2C%20World!");
+
+    assert.strictEqual(u0.originEquals(u0.toURL()), true);
+    assert.strictEqual(u0.originEquals(u0b.toURL()), true);
+    assert.strictEqual(u0b.originEquals(u1.toURL()), false);
+    assert.strictEqual(u1.originEquals(u2.toURL()), false);
+    assert.strictEqual(u2.originEquals(u3.toURL()), false);
+    assert.strictEqual(u3.originEquals(u3.toURL()), false);
+    assert.strictEqual(AbsoluteUri.fromString("https://whatwg.org/hoge").originEquals(u4.toURL()), true);
+    assert.strictEqual(u5.originEquals(u6.toURL()), false);
+    assert.strictEqual(u6.originEquals(u6.toURL()), false);
 
   });
 
   it("originEquals(string)", () => {
+    const u0 = AbsoluteUri.fromString("http://example.com:8080/");
+    const u0b = AbsoluteUri.fromString("Http://example.COM:8080/");
+    const u1 = AbsoluteUri.fromString("http://example.com:80/hoge");
+    const u2 = AbsoluteUri.fromString("https://example.com:80/hoge");
+    const u3 = AbsoluteUri.fromString("file:///D:/hoge/index.txt");
+    const u4 = AbsoluteUri.fromString("blob:https://whatwg.org/d0360e2f-caee-469f-9a2f-87d5b0456f6f");
+    const u5 = AbsoluteUri.fromString("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6");
+    const u6 = AbsoluteUri.fromString("data:,Hello%2C%20World!");
+
+    assert.strictEqual(u0.originEquals(u0.toString()), true);
+    assert.strictEqual(u0.originEquals(u0b.toString()), true);
+    assert.strictEqual(u0b.originEquals(u1.toString()), false);
+    assert.strictEqual(u1.originEquals(u2.toString()), false);
+    assert.strictEqual(u2.originEquals(u3.toString()), false);
+    assert.strictEqual(u3.originEquals(u3.toString()), false);
+    assert.strictEqual(AbsoluteUri.fromString("https://whatwg.org/hoge").originEquals(u4.toString()), true);
+    assert.strictEqual(u5.originEquals(u6.toString()), false);
+    assert.strictEqual(u6.originEquals(u6.toString()), false);
+
+    assert.strictEqual(u1.originEquals("HTTP://EXAMPLE.COM/"), true);
+    assert.strictEqual(u1.originEquals("HTTP://EXAMPLE.COM:80/"), true);
 
   });
 
   it("originEquals(*)", () => {
+    assert.throws(() => {
+      AbsoluteUri.fromString("http://example.com:8080/").originEquals(1 as unknown as string);
+    }, {
+      name: "TypeError",
+      message: "other"
+    });
+
+  });
+
+});
+
+describe("AbsoluteUri.prototype.withQuery", () => {
+  it("withQuery(Array<string>)", () => {
+    const u0 = AbsoluteUri.fromString("http://example.com:80/hoge?a=1").withQuery([]);
+    assert.strictEqual(JSON.stringify(u0.query), '[]');
+    assert.strictEqual(u0.toString(), "http://example.com/hoge");
+
+    const u1 = AbsoluteUri.fromString("http://example.com:80/hoge?a=1").withQuery([["b","2"]]);
+    assert.strictEqual(JSON.stringify(u1.query), '[["b","2"]]');
+    assert.strictEqual(u1.toString(), "http://example.com/hoge?b=2");
+
+    const u2 = AbsoluteUri.fromString("http://example.com:80/hoge#foo").withQuery([["b","3"],["c","1"]]);
+    assert.strictEqual(JSON.stringify(u2.query), '[["b","3"],["c","1"]]');
+    assert.strictEqual(u2.toString(), "http://example.com/hoge?b=3&c=1#foo");
+
+    const u3 = AbsoluteUri.fromString("http://example.com:80/hoge#foo").withQuery([["b","3"],["b","1"]]);
+    assert.strictEqual(JSON.stringify(u3.query), '[["b","3"],["b","1"]]');
+    assert.strictEqual(u3.toString(), "http://example.com/hoge?b=3&b=1#foo");
+
+    const u4 = AbsoluteUri.fromString("http://example.com:80/hoge").withQuery([["b","2=4"]]);
+    assert.strictEqual(JSON.stringify(u4.query), '[["b","2=4"]]');
+    assert.strictEqual(u4.toString(), "http://example.com/hoge?b=2%3D4");
+
+    const u5 = AbsoluteUri.fromString("http://example.com:80/hoge").withQuery([["b",""]]);
+    assert.strictEqual(JSON.stringify(u5.query), '[["b",""]]');
+    assert.strictEqual(u5.toString(), "http://example.com/hoge?b=");
+
+    const u6 = AbsoluteUri.fromString("http://example.com:80/hoge").withQuery([["b","あ"]]);
+    assert.strictEqual(JSON.stringify(u6.query), '[["b","あ"]]');
+    assert.strictEqual(u6.toString(), "http://example.com/hoge?b=%E3%81%82");
+
+    const u7 = AbsoluteUri.fromString("http://example.com:80/hoge?a=1").withQuery([["",""]]);
+    assert.strictEqual(JSON.stringify(u7.query), '[["",""]]');
+    assert.strictEqual(u7.toString(), "http://example.com/hoge?=");
+
+  });
+
+  it("withQuery(Array<*>)", () => {
+    const u1 = AbsoluteUri.fromString("http://example.com:80/hoge?a=1").withQuery([["b",1] as unknown as [string,string]]);
+    assert.strictEqual(JSON.stringify(u1.query), '[]');
+    assert.strictEqual(u1.toString(), "http://example.com/hoge");
+
+    const u1b = AbsoluteUri.fromString("http://example.com:80/hoge?a=1").withQuery([["b","1","2"] as unknown as [string,string]]);
+    assert.strictEqual(JSON.stringify(u1b.query), '[]');
+    assert.strictEqual(u1b.toString(), "http://example.com/hoge");
+
+  });
+
+});
+
+describe("AbsoluteUri.prototype.withoutQuery", () => {
+  it("withoutQuery()", () => {
+    const u1 = AbsoluteUri.fromString("http://example.com:80/hoge?a=1#a").withoutQuery();
+    assert.strictEqual(u1.toString(), "http://example.com/hoge#a");
+
+    const u2 = AbsoluteUri.fromString("http://example.com:80/hoge?a").withoutQuery();
+    assert.strictEqual(u2.toString(), "http://example.com/hoge");
+
+    const u6 = AbsoluteUri.fromString("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6").withoutQuery();
+    assert.strictEqual(u6.toString(), "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6");
+
+    const u7 = AbsoluteUri.fromString("data:,Hello%2C%20World!").withoutQuery();
+    assert.strictEqual(u7.toString(), "data:,Hello%2C%20World!");
 
   });
 
@@ -447,11 +578,5 @@ describe("AbsoluteUri.prototype.xxxxx", () => {
 
 });
 
-describe("AbsoluteUri.prototype.xxxxx", () => {
-  it("xxxxx", () => {
-
-  });
-
-});
 
 

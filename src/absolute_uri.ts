@@ -36,11 +36,12 @@ function isQueryEntry(value: unknown): value is QueryEntry {
     if (unknownArray.every((i) => typeof i === "string") !== true) {
       return false;
     }
-    const stringArray = unknownArray as [ string, string ];
-    return (stringArray[0].length > 0);
+    return true; // nameが""でも妥当
   }
   return false;
 }
+
+const NULL_ORIGIN = "null";
 
 /**
  * The normalized absolute URL
@@ -54,11 +55,11 @@ class AbsoluteUri {
 
   private constructor(uri: URL) {
     // searchが"?"のみの場合、ブラウザによってはgetterでは""になるのに、実際は"?"だけ残るので統一する
-    if (uri.search === "?") {
+    if (uri.search === "") {
       uri.search = "";
     }
     // hashが"#"のみの場合、ブラウザによってはgetterでは""になるのに、実際は"#"だけ残るので統一する
-    if (uri.hash === "#") {
+    if (uri.hash === "") {
       uri.hash = "";
     }
 
@@ -221,7 +222,7 @@ class AbsoluteUri {
     case Scheme.WSS:
       return this.#normalizedUri.origin;
     default:
-      return "null";
+      return NULL_ORIGIN;
         // fileスキームの場合に不透明なoriginとするかはブラウザによっても違う（たとえばChromeは"file://", Firefoxは"null"）。一括不透明とする
     }
   }
@@ -270,10 +271,10 @@ class AbsoluteUri {
       throw new TypeError("other");
     }
 
-    if (this.origin === "null") {
+    if (this.origin === NULL_ORIGIN) {
       return false;
     }
-    if (otherUri.origin === "null") {
+    if (otherUri.origin === NULL_ORIGIN) {
       return false;
     }
     return this.origin === otherUri.origin;
