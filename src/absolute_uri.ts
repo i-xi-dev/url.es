@@ -248,9 +248,39 @@ class AbsoluteUri {
     return new URL(this.#normalizedUri.toString());
   }
 
-  equals(): boolean {
-    throw new Error("not implemented");
+  /**
+   * Determines whether this origin is equal to the origin of the absolute URL represented by another object.
+   * 
+   * @param other - An absolute URL.
+   * @returns If this origin is equal to the origin of the specified absolute URL, `true`; otherwise, `false`.
+   * @throws {TypeError} The `other` is not type of `AbsoluteUri`, `URL`, or `string`.
+   */
+  originEquals(other: AbsoluteUri | URL | string): boolean {
+    let otherUri: AbsoluteUri;
+    if (other instanceof AbsoluteUri) {
+      otherUri = other;
+    }
+    else if (other instanceof URL) {
+      otherUri = AbsoluteUri.fromURL(other);
+    }
+    else if (typeof other === "string") {
+      otherUri = AbsoluteUri.fromString(other);
+    }
+    else {
+      throw new TypeError("other");
+    }
+
+    if (this.origin === "null") {
+      return false;
+    }
+    if (otherUri.origin === "null") {
+      return false;
+    }
+    return this.origin === otherUri.origin;
   }
+
+  // equals(): boolean {
+  // }
 
   // relativize(relativePath: string): string {
   // }
@@ -258,9 +288,9 @@ class AbsoluteUri {
   // resolve(relativeUri: string): AbsoluteUri {
   // }
 
-  withPath(): AbsoluteUri {
-    throw new Error("not implemented");
-  }
+  // withPath(): AbsoluteUri {
+  //   throw new Error("not implemented");
+  // }
 
   /**
    * Return a new `AbsoluteUri` instance with the query set.
