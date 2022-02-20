@@ -1,5 +1,5 @@
 import assert from "node:assert";
-import { AbsoluteUri } from "./absolute_uri";
+import { AbsoluteUri } from "../../dist/index.js";
 
 //TODO fromString,fromURL
 
@@ -487,7 +487,7 @@ describe("AbsoluteUri.prototype.originEquals", () => {
 
   it("originEquals(*)", () => {
     assert.throws(() => {
-      AbsoluteUri.fromString("http://example.com:8080/").originEquals(1 as unknown as string);
+      AbsoluteUri.fromString("http://example.com:8080/").originEquals(1);
     }, {
       name: "TypeError",
       message: "other"
@@ -534,11 +534,11 @@ describe("AbsoluteUri.prototype.withQuery", () => {
   });
 
   it("withQuery(Array<*>)", () => {
-    const u1 = AbsoluteUri.fromString("http://example.com:80/hoge?a=1").withQuery([["b",1] as unknown as [string,string]]);
+    const u1 = AbsoluteUri.fromString("http://example.com:80/hoge?a=1").withQuery([["b",1]]);
     assert.strictEqual(JSON.stringify(u1.query), '[]');
     assert.strictEqual(u1.toString(), "http://example.com/hoge");
 
-    const u1b = AbsoluteUri.fromString("http://example.com:80/hoge?a=1").withQuery([["b","1","2"] as unknown as [string,string]]);
+    const u1b = AbsoluteUri.fromString("http://example.com:80/hoge?a=1").withQuery([["b","1","2"]]);
     assert.strictEqual(JSON.stringify(u1b.query), '[]');
     assert.strictEqual(u1b.toString(), "http://example.com/hoge");
 

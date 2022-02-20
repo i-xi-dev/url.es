@@ -296,8 +296,8 @@ class AbsoluteUri {
   /**
    * Return a new `AbsoluteUri` instance with the query set.
    * 
-   * @param query クエリパラメーターのエントリー配列
-   * @returns 生成したインスタンス
+   * @param query - The query parameters.
+   * @returns A new `AbsoluteUri` instance.
    */
   withQuery(query: Array<QueryEntry>): AbsoluteUri {
     const work = this.toURL();
@@ -352,4 +352,7 @@ class AbsoluteUri {
 }
 Object.freeze(AbsoluteUri);
 
-export { AbsoluteUri };
+export {
+  type QueryEntry,
+  AbsoluteUri
+};
