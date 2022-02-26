@@ -1,6 +1,6 @@
 //
 
-import { NumberUtils } from "@i-xi-dev/fundamental";
+import { isNonNegativeInteger } from "@i-xi-dev/fundamental";
 import { ByteSequence } from "@i-xi-dev/bytes";
 import { toUnicode } from "punycode";
 
@@ -153,7 +153,7 @@ class AbsoluteUri {
     }
 
     const defaultPort = DefaultPortMap.get(this.scheme);
-    if ((typeof defaultPort === "number") && NumberUtils.isNonNegativeInteger(defaultPort)) {
+    if ((typeof defaultPort === "number") && isNonNegativeInteger(defaultPort)) {
       return defaultPort;
     }
     return Number.NaN;
@@ -354,5 +354,5 @@ Object.freeze(AbsoluteUri);
 
 export {
   type QueryEntry,
-  AbsoluteUri
+  AbsoluteUri,
 };
