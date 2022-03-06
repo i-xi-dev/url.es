@@ -4,7 +4,7 @@ import { isNonNegativeInteger } from "@i-xi-dev/fundamental";
 import { ByteSequence } from "@i-xi-dev/bytes";
 import { toUnicode } from "punycode";
 
-const Scheme = {
+const _Scheme = {
   BLOB: "blob",
   FILE: "file",
   FTP: "ftp",
@@ -17,17 +17,17 @@ const Scheme = {
 /**
  * デフォルトポート
  */
-const DefaultPortMap: Map<string, number> = new Map([
-  [ Scheme.FTP, 21 ],
-  [ Scheme.HTTP, 80 ],
-  [ Scheme.HTTPS, 443 ],
-  [ Scheme.WS, 80 ],
-  [ Scheme.WSS, 443 ],
+const _DefaultPortMap: Map<string, number> = new Map([
+  [ _Scheme.FTP, 21 ],
+  [ _Scheme.HTTP, 80 ],
+  [ _Scheme.HTTPS, 443 ],
+  [ _Scheme.WS, 80 ],
+  [ _Scheme.WSS, 443 ],
 ]);
 
-type QueryEntry = [ name: string, value: string ];
+type UriQueryParameter = [ name: string, value: string ];
 
-function isQueryEntry(value: unknown): value is QueryEntry {
+function _isUriQueryParameter(value: unknown): value is UriQueryParameter {
   if (Array.isArray(value)) {
     const unknownArray = value as Array<unknown>;
     if (unknownArray.length !== 2) {
@@ -41,7 +41,7 @@ function isQueryEntry(value: unknown): value is QueryEntry {
   return false;
 }
 
-const NULL_ORIGIN = "null";
+const _NULL_ORIGIN = "null";
 
 /**
  * The normalized absolute URL
@@ -152,7 +152,7 @@ class AbsoluteUri {
       return Number.parseInt(specifiedString, 10);
     }
 
-    const defaultPort = DefaultPortMap.get(this.scheme);
+    const defaultPort = _DefaultPortMap.get(this.scheme);
     if ((typeof defaultPort === "number") && isNonNegativeInteger(defaultPort)) {
       return defaultPort;
     }
@@ -183,8 +183,8 @@ class AbsoluteUri {
   /**
    * Gets the result of parsing the query for this instance in the application/x-www-form-urlencoded format.
    */
-  get query(): Array<QueryEntry> {
-    const entries: Array<QueryEntry> = [];
+  get query(): Array<UriQueryParameter> {
+    const entries: Array<UriQueryParameter> = [];
     for (const entry of this.#normalizedUri.searchParams.entries()) {
       entries.push([
         entry[0],
@@ -214,15 +214,15 @@ class AbsoluteUri {
    */
   get origin(): string {
     switch (this.scheme) {
-    case Scheme.BLOB:
-    case Scheme.FTP:
-    case Scheme.HTTP:
-    case Scheme.HTTPS:
-    case Scheme.WS:
-    case Scheme.WSS:
+    case _Scheme.BLOB:
+    case _Scheme.FTP:
+    case _Scheme.HTTP:
+    case _Scheme.HTTPS:
+    case _Scheme.WS:
+    case _Scheme.WSS:
       return this.#normalizedUri.origin;
     default:
-      return NULL_ORIGIN;
+      return _NULL_ORIGIN;
         // fileスキームの場合に不透明なoriginとするかはブラウザによっても違う（たとえばChromeは"file://", Firefoxは"null"）。一括不透明とする
     }
   }
@@ -271,10 +271,10 @@ class AbsoluteUri {
       throw new TypeError("other");
     }
 
-    if (this.origin === NULL_ORIGIN) {
+    if (this.origin === _NULL_ORIGIN) {
       return false;
     }
-    if (otherUri.origin === NULL_ORIGIN) {
+    if (otherUri.origin === _NULL_ORIGIN) {
       return false;
     }
     return this.origin === otherUri.origin;
@@ -299,9 +299,9 @@ class AbsoluteUri {
    * @param query - The query parameters.
    * @returns A new `AbsoluteUri` instance.
    */
-  withQuery(query: Array<QueryEntry>): AbsoluteUri {
+  withQuery(query: Array<UriQueryParameter>): AbsoluteUri {
     const work = this.toURL();
-    if (Array.isArray(query) && query.every((entry) => isQueryEntry(entry)) && (query.length > 0)) {
+    if (Array.isArray(query) && query.every((entry) => _isUriQueryParameter(entry)) && (query.length > 0)) {
       const queryParams = new URLSearchParams(query);
       work.search = "?" + queryParams.toString();
     }
@@ -353,6 +353,6 @@ class AbsoluteUri {
 Object.freeze(AbsoluteUri);
 
 export {
-  type QueryEntry,
+  type UriQueryParameter,
   AbsoluteUri,
 };
