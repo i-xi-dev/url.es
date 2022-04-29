@@ -68,7 +68,7 @@ class Uri {
   /**
    * Creates a new `Uri` instance from the specified string representation of an absolute URL.
    * 
-   * @param value - A string representing an absolute URL.
+   * @param str A string representing an absolute URL.
    * @returns A `Uri` instance.
    * @throws {TypeError} The `value` is not an absolute URL.
    */
@@ -80,7 +80,7 @@ class Uri {
   /**
    * Creates a new `Uri` instance from the specified `URL`.
    * 
-   * @param value - A URL.
+   * @param url A URL.
    * @returns A `Uri` instance.
    */
   static fromURL(url: URL): Uri {
@@ -125,6 +125,14 @@ class Uri {
 
   /**
    * Gets the host for this instance.
+   * 
+   * @example
+   * ```javascript
+   * const uri = Uri.fromString("http://ドメイン名例.jp/foo");
+   * 
+   * uri.rawHost;
+   * // → "xn--eckwd4c7cu47r2wf.jp"
+   * ```
    */
   get rawHost(): string {
     return this.#normalizedUri.hostname;
@@ -132,6 +140,14 @@ class Uri {
 
   /**
    * Gets the decoded host for this instance.
+   * 
+   * @example
+   * ```javascript
+   * const uri = Uri.fromString("http://ドメイン名例.jp/foo");
+   * 
+   * uri.rawHost;
+   * // → "ドメイン名例.jp"
+   * ```
    */
   get host(): string {
     if (this.rawHost) {
@@ -286,7 +302,7 @@ class Uri {
   /**
    * Determines whether this origin is equal to the origin of the absolute URL represented by another object.
    * 
-   * @param other - An absolute URL.
+   * @param other An absolute URL.
    * @returns If this origin is equal to the origin of the specified absolute URL, `true`; otherwise, `false`.
    * @throws {TypeError} The `other` is not type of `Uri`, `URL`, or `string`.
    */
@@ -330,7 +346,7 @@ class Uri {
   /**
    * Return a new `Uri` instance with the query set.
    * 
-   * @param query - The query parameters.
+   * @param query The query parameters.
    * @returns A new `Uri` instance.
    */
   withQuery(query: Array<Uri.QueryParameter>): Uri {
@@ -359,7 +375,7 @@ class Uri {
   /**
    * Return a new `Uri` instance with the fragment set.
    * 
-   * @param fragment - The fragment. No need to prepend a `"#"` to fragment.
+   * @param fragment The fragment. No need to prepend a `"#"` to fragment.
    * @returns A new `Uri` instance.
    */
   withFragment(fragment: string): Uri {
