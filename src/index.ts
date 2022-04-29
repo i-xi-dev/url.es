@@ -90,6 +90,14 @@ class Uri {
 
   /**
    * Gets the scheme name for this instance.
+   * 
+   * @example
+   * ```javascript
+   * const uri = Uri.fromString("http://example.com/foo");
+   * 
+   * uri.scheme;
+   * // → "http"
+   * ```
    */
   get scheme(): string {
     return this.#normalizedUri.protocol.replace(/:$/, "");
@@ -145,7 +153,7 @@ class Uri {
    * ```javascript
    * const uri = Uri.fromString("http://ドメイン名例.jp/foo");
    * 
-   * uri.rawHost;
+   * uri.host;
    * // → "ドメイン名例.jp"
    * ```
    */
@@ -177,6 +185,32 @@ class Uri {
 
   /**
    * Gets the port number for this instance.
+   * 
+   * If the port number is omitted, returns the number in below table.
+   * | `scheme` | number |
+   * | :--- | ---: |
+   * | `"ftp"` | `21` |
+   * | `"http"` | `80` |
+   * | `"https"` | `443` |
+   * | `"ws"` | `80` |
+   * | `"wss"` | `443` |
+   * | others | `NaN` |
+   * 
+   * @example
+   * ```javascript
+   * const uri = Uri.fromString("http://example.com/foo");
+   * 
+   * uri.port;
+   * // → 80
+   * ```
+   * 
+   * @example
+   * ```javascript
+   * const uri = Uri.fromString("http://example.com:8080/foo");
+   * 
+   * uri.port;
+   * // → 8080
+   * ```
    */
   get port(): number {
     const specifiedString = this.#normalizedUri.port;
@@ -207,6 +241,14 @@ class Uri {
 
   /**
    * Gets the query for this instance.
+   * 
+   * @example
+   * ```javascript
+   * const uri = Uri.fromString("http://example.com/foo?p1=%E5%80%A41&p2=123");
+   * 
+   * uri.rawQuery;
+   * // → "p1=%E5%80%A41&p2=123"
+   * ```
    */
   get rawQuery(): string {
     return this.#normalizedUri.search.replace(/^\?/, "");
@@ -214,6 +256,22 @@ class Uri {
 
   /**
    * Gets the result of parsing the query for this instance in the application/x-www-form-urlencoded format.
+   * 
+   * @example
+   * ```javascript
+   * const uri = Uri.fromString("http://example.com/foo?p1=%E5%80%A41&p2=123");
+   * 
+   * uri.query;
+   * // → [ [ "p1", "値1" ], [ "p2", "123" ] ]
+   * ```
+   * 
+   * @example
+   * ```javascript
+   * const uri = Uri.fromString("http://example.com/foo?textformat");
+   * 
+   * uri.query;
+   * // → [ [ "textformat", "" ] ]
+   * ```
    */
   get query(): Array<Uri.QueryParameter> {
     const entries: Array<Uri.QueryParameter> = [];
@@ -231,7 +289,7 @@ class Uri {
    * 
    * @example
    * ```javascript
-   * const uri = Uri.fromString("http://example.com/foo#素片");
+   * const uri = Uri.fromString("http://example.com/foo#%E7%B4%A0%E7%89%87");
    * 
    * uri.rawFragment;
    * // → "%E7%B4%A0%E7%89%87"
@@ -260,7 +318,8 @@ class Uri {
   /**
    * Gets the origin for this instance.
    * 
-   * If this scheme is `"blob"`, "ftp", "http", "https", "ws", "wss", the value of `new URL(this.toString()).origin` ; otherwise, `"null"`.
+   * If this scheme is `"blob"`, `"ftp"`, `"http"`, `"https"`, `"ws"`, `"wss"`, the value of `new URL(this.toString()).origin`
+   * ; otherwise, `"null"`.
    */
   get origin(): string {
     switch (this.scheme) {
