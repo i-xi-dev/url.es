@@ -212,6 +212,14 @@ class Uri {
 
   /**
    * Gets the fragment for this instance.
+   * 
+   * @example
+   * ```javascript
+   * const uri = Uri.fromString("http://example.com/foo#素片");
+   * 
+   * uri.rawFragment;
+   * // → "%E7%B4%A0%E7%89%87"
+   * ```
    */
   get rawFragment(): string {
     return this.#normalizedUri.hash.replace(/^#/, "");
@@ -219,6 +227,14 @@ class Uri {
 
   /**
    * Gets the decoded fragment for this instance.
+   * 
+   * @example
+   * ```javascript
+   * const uri = Uri.fromString("http://example.com/foo#素片");
+   * 
+   * uri.fragment;
+   * // → "素片"
+   * ```
    */
   get fragment(): string {
     // return globalThis.decodeURIComponent(this.rawFragment); だと、URIErrorになる場合がある
@@ -227,6 +243,8 @@ class Uri {
 
   /**
    * Gets the origin for this instance.
+   * 
+   * If this scheme is `"blob"`, "ftp", "http", "https", "ws", "wss", the value of `new URL(this.toString()).origin` ; otherwise, `"null"`.
    */
   get origin(): string {
     switch (this.scheme) {

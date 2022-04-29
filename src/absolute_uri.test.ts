@@ -322,6 +322,7 @@ describe("Uri.prototype.fragment", () => {
     expect(Uri.fromString("http://example.com:80/hoge#foo#5=%3CA").fragment).to.equal("foo#5=<A");
     expect(Uri.fromString("http://example.com:80/hoge#foo#5%3DA").fragment).to.equal("foo#5=A");
     expect(Uri.fromString("http://example.com:80/hoge#%E3%81%82").fragment).to.equal("あ");
+    expect(Uri.fromString("http://example.com:80/hoge#あ").fragment).to.equal("あ");
     expect(Uri.fromString("http://example.com:80/hoge#%20!%22%3C%3E%60%3").fragment).to.equal(" !\"<>`%3");
 
   });
