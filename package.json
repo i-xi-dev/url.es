@@ -61,8 +61,5 @@
   },
   "publishConfig": {
     "access": "public"
-  },
-  "dependencies": {
-    "punycode": "^2.1.1"
   }
 }

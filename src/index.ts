@@ -2,7 +2,7 @@
 
 import { Integer } from "@i-xi-dev/fundamental";
 import { ByteSequence } from "@i-xi-dev/bytes";
-import { toUnicode } from "punycode";
+import { _decodePunycode } from "./punycode_decoder";
 
 const _Scheme = {
   BLOB: "blob",
@@ -134,9 +134,27 @@ class Uri {
    * Gets the decoded host for this instance.
    */
   get host(): string {
-    const rawHost = this.rawHost;
-    if (rawHost) {
-      return toUnicode(rawHost);
+    if (this.rawHost) {
+      const parts = this.rawHost.split(".");
+      const decodedParts = parts.map((part) => {
+        if (part.startsWith("xn--")) { // 小文字の"xn--"で判定しているのは、rawHostはURL#hostnameの前提だから。
+          return _decodePunycode(part.substring(4));
+        }
+        else {
+          return part;
+        }
+      });
+      const decoded = decodedParts.join(".");
+
+      // デコード結果をエンコードしたらthis.rawHostと等しくなるかチェック
+      const test = new URL(this.#normalizedUri);
+      test.hostname = decoded;
+      if (test.hostname === this.rawHost) {
+        // 等しければok。デコード結果を返す
+        return decoded;
+      }
+      // 等しくない
+      throw new Error("failed: punicode decode");
     }
     return "";
   }
@@ -203,7 +221,7 @@ class Uri {
    * Gets the decoded fragment for this instance.
    */
   get fragment(): string {
-    // return globalThis.decodeURIComponent(this.rawFragment); URIErrorになる場合がある
+    // return globalThis.decodeURIComponent(this.rawFragment); だと、URIErrorになる場合がある
     return ByteSequence.fromPercentEncoded(this.rawFragment).utf8DecodeTo();
   }
 
