@@ -9,6 +9,7 @@ A JavaScript immutable object that represents the normalized absolute [URL](http
 
 
 ## Requirement
+`Uri` delegates the URL parsing to the [`URL`](https://developer.mozilla.org/en-US/docs/Web/API/URL).
 
 - Chrome
 - Edge
