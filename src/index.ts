@@ -136,7 +136,7 @@ class Uri {
    * 
    * @example
    * ```javascript
-   * const uri = Uri.fromString("http://ドメイン名例.jp/foo");
+   * const uri = Uri.fromString("http://xn--eckwd4c7cu47r2wf.jp/foo");
    * 
    * uri.rawHost;
    * // → "xn--eckwd4c7cu47r2wf.jp"
@@ -151,7 +151,7 @@ class Uri {
    * 
    * @example
    * ```javascript
-   * const uri = Uri.fromString("http://ドメイン名例.jp/foo");
+   * const uri = Uri.fromString("http://xn--eckwd4c7cu47r2wf.jp/foo");
    * 
    * uri.host;
    * // → "ドメイン名例.jp"
@@ -304,7 +304,7 @@ class Uri {
    * 
    * @example
    * ```javascript
-   * const uri = Uri.fromString("http://example.com/foo#素片");
+   * const uri = Uri.fromString("http://example.com/foo#%E7%B4%A0%E7%89%87");
    * 
    * uri.fragment;
    * // → "素片"

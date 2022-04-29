@@ -38,4 +38,35 @@ import { Uri } from "https://cdn.skypack.dev/@i-xi-dev/url";
 ```
 
 
-## Usage
+## Example
+
+### Rendering an URL
+
+```javascript
+const url = Uri.fromString("http://xn--eckwd4c7cu47r2wf.jp/foo?p1=%E5%80%A41&p2=%E5%80%A42#%E7%B4%A0%E7%89%87");
+
+url.scheme;
+// → "http"
+
+url.rawHost;
+// → "xn--eckwd4c7cu47r2wf.jp"
+
+url.host;
+// → "ドメイン名例.jp"
+
+url.port;
+// → 80
+
+url.rawQuery;
+// → "p1=%E5%80%A41&p2=%E5%80%A42"
+
+url.query;
+// → [ [ "p1", "値1" ], [ "p2", "値2" ] ]
+
+url.rawFragment;
+// → "%E7%B4%A0%E7%89%87"
+
+url.fragment;
+// → "素片"
+
+```
