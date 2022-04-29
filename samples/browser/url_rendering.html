@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>URL rendering</title>
+    <style>
+      *.url {
+        display: flex;
+        flex-flow: row nowrap;
+        column-gap: 4px;
+        align-items: baseline;
+        font-size: 16px;
+        line-height: 20px;
+        user-select: none;
+      }
+      svg {
+        align-self: center;
+      }
+      *.s {
+        color: rgb(86, 139, 135);
+      }
+      *.ns {
+        color: #999;
+      }
+      *.nsx {
+        color: red;
+      }
+      path {
+        stroke-width: 2px;
+        stroke: currentcolor;
+        fill: none;
+      }
+      path + path {
+        fill: currentcolor;
+        stroke: none;
+      }
+      span + span {
+        color: #000a;
+      }
+      input[type="text"] {
+        width: 100%;
+        box-sizing: border-box;
+      }
+      input[type="text"]:invalid {
+        color: red;
+      }
+    </style>
+    <script type="module">
+      import { Uri } from "https://cdn.skypack.dev/@i-xi-dev/url";
+
+      function icon(secure) {
+        return `<svg width="20" height="20">
+          <g class="${secure === true ? "s" : "ns"}">
+            <path d="M 6 11 L 6 6 A 4 4 180 0 1 14 6 L 14 11"/>
+            <path d="M 3 10 L 17 10 L 17 17 L 3 17 z"/>
+          </g>
+          ${ secure === true ? "" : `<g class="nsx"><path d="M 1 19 L 19 1" /></g>` }
+        </svg>`;
+      }
+
+      const output1 = document.getElementById("output1");
+
+      document.getElementById("input2").addEventListener("click", async (event) => {
+        [ ...output1.children ].forEach(element => element.remove());
+
+        try {
+          const url = Uri.fromString(document.getElementById("input1").value);
+
+          if (["http", "https"].includes(url.scheme)) {
+            output1.innerHTML = `<div class="url">
+              ${icon(url.scheme === "https")}
+              <span>${url.host}</span>
+              <span>${url.rawPath}</span>
+            </div>`;
+          }
+          else {
+            output1.innerHTML = "Not supported";
+          }
+        }
+        catch (exception) {
+          console.error(exception);
+          output1.innerHTML = "Error";
+
+          /*
+          URLコンストラクタの既知の差異
+          ・受け付ける形式に差異
+            たとえば、ドメインに👨‍👨‍👦‍👦を含む場合
+              Firefox → エラー
+                → パースをnew URL()に委ねている以上、対応困難。（new URL()を使わずにパースしないといけなくなるから嫌だ）
+              Chrome → 正常（ZWJや異体字セレクタは取り除かれる）
+          ・ホストがIPアドレスで、訂正可能エラーを含む場合
+              Firefox → エラーを許容しない
+                → 
+              Chrome → おそらく仕様準拠
+          */
+        }
+      }, { passive: true, });
+    </script>
+  </head>
+  <body>
+    <fieldset>
+      <legend>Input</legend>
+      <dl>
+        <div>
+          <dt>http URL</dt>
+          <dd><input type="text" id="input1" value="http://example.com/" pattern="https?://.+" /></dd>
+        </div>
+      </dl>
+      <button id="input2">render</button>
+    </fieldset>
+
+    <fieldset>
+      <legend>Output</legend>
+      <div id="output1"></div>
+    </fieldset>
+  </body>
+</html>
