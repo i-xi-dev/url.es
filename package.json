@@ -23,7 +23,13 @@
     "type": "git",
     "url": "git+https://github.com/i-xi-dev/url.es.git"
   },
-  "keywords": [],
+  "keywords": [
+    "url",
+    "parse",
+    "browser",
+    "deno",
+    "nodejs"
+  ],
   "author": "i-xi-dev",
   "license": "MIT",
   "bugs": {
