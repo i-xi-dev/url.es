@@ -41,7 +41,7 @@ import { Uri } from "https://cdn.skypack.dev/@i-xi-dev/url";
 
 ## Example
 
-### Rendering an URL
+### For URL rendering
 
 ```javascript
 const url = Uri.fromString("http://xn--eckwd4c7cu47r2wf.jp/foo?p1=%E5%80%A41&p2=%E5%80%A42#%E7%B4%A0%E7%89%87");
