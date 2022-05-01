@@ -118,7 +118,7 @@ function _parseInput(input: string): { basicString: string, extendedString: stri
 type _DigitIteratorResult = {
   digit: int,
   isLast: boolean,
-}
+};
 
 function* _digitIteratorOf(extendedString: string): Generator<_DigitIteratorResult, void, void> {
   const codepoints = [ ...extendedString ].map((char) => char.charCodeAt(0));
