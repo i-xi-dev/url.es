@@ -232,6 +232,13 @@ class Uri {
     return this.#normalizedUri.pathname;
   }
 
+  //TODO URLオブジェクト内部でパスがリストなのか非リストなのかは知ることができないので、"/"で始まっていれば"/"で分割した結果を返す？
+  //     特別スキームの場合はリストと推定して良いだろうが、
+  //     では、"hogehogehoge:/test1/test2"は？ パスが"/"始まりなのでリスト？
+  //     その場合、"hogehogehoge:test1/test2"は？ 同じスキームなのに非リスト？
+  //     ↓
+  //     案1: 特別スキームの場合のみリストとみなす
+  //     案2: "/"で始まっていればリストとみなす
   // /**
   //  * Gets the path segments for this instance.
   //  */
