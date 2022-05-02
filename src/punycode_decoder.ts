@@ -16,10 +16,10 @@ const _DAMP = 700;
 const _INITIAL_BIAS = 72;
 const _INITIAL_N = 128;
 
+const _BASE_MINUS_TMIN = _BASE - _TMIN;
+
 // https://datatracker.ietf.org/doc/html/rfc3492#section-6.1
 function _adaptBias(delta: int, numpoints: int, firsttime: boolean): int {
-  const _BASE_MINUS_TMIN = _BASE - _TMIN;
-
   delta = Math.trunc(delta / ((firsttime === true) ? _DAMP : 2));
   delta = delta + Math.trunc(delta / numpoints);
   let k: int;
@@ -36,7 +36,7 @@ export function _decodePunycode(input: string): string {
   //   throw new TypeError("input");
   // }
 
-  const { basicString, extendedString } = _parseInput(input);
+  const { basicString, extendedString } = _splitInput(input);
   const output = [ ...basicString ];
 
   let n = _INITIAL_N;
@@ -86,7 +86,7 @@ export function _decodePunycode(input: string): string {
   // overflow検出を省いているので、呼び出し側で再エンコードしてinputと一致するかチェックすること
 }
 
-function _parseInput(input: string): { basicString: string, extendedString: string } {
+function _splitInput(input: string): { basicString: string, extendedString: string } {
   // URL#hostnameをinputにする前提なので、エラーはありえない
   // if (/^[\u0000-\u007F]*$/.test(input) !== true) {
   //   throw new RangeError("input");
