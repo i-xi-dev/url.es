@@ -414,6 +414,20 @@ class Uri {
    * 
    * @param query The query parameters.
    * @returns A new `Uri` instance.
+   * @example
+   * ```javascript
+   * const uri = Uri.fromString("http://example.com/foo?p1=%E5%80%A41&p2=123");
+   * const uriWithQuery = uri.withQuery([ [ "p1", "値1" ], [ "p2", "123" ] ]);
+   * // uriWithQuery
+   * //   → "http://example.com/foo?p1=%E5%80%A41&p2=123"
+   * ```
+   * @example
+   * ```javascript
+   * const uri = Uri.fromString("http://example.com/foo?p1=%E5%80%A41&p2=123");
+   * const uriWithQuery = uri.withQuery([ [ "p1", "v1" ] ]);
+   * // uriWithQuery
+   * //   → "http://example.com/foo?p1=v1"
+   * ```
    */
   withQuery(query: Array<Uri.QueryParameter>): Uri {
     const work = this.toURL();
@@ -431,6 +445,13 @@ class Uri {
    * Returns a new `Uri` instance with the query removed.
    * 
    * @returns A new `Uri` instance.
+   * @example
+   * ```javascript
+   * const uri = Uri.fromString("http://example.com/foo?p1=%E5%80%A41&p2=123");
+   * const uriWithoutQuery = uri.withoutQuery();
+   * // uriWithoutQuery.toString()
+   * //   → "http://example.com/foo"
+   * ```
    */
   withoutQuery(): Uri {
     const work = this.toURL();
