@@ -94,9 +94,9 @@ class Uri {
    * @example
    * ```javascript
    * const uri = Uri.fromString("http://example.com/foo");
-   * 
-   * uri.scheme;
-   * // → "http"
+   * const scheme = uri.scheme;
+   * // scheme
+   * //   → "http"
    * ```
    */
   get scheme(): string {
@@ -200,17 +200,17 @@ class Uri {
    * @example
    * ```javascript
    * const uri = Uri.fromString("http://example.com/foo");
-   * 
-   * uri.port;
-   * // → 80
+   * const port = uri.port;
+   * // port
+   * //   → 80
    * ```
    * 
    * @example
    * ```javascript
    * const uri = Uri.fromString("http://example.com:8080/foo");
-   * 
-   * uri.port;
-   * // → 8080
+   * const port = uri.port;
+   * // port
+   * //   → 8080
    * ```
    */
   get port(): number {
@@ -253,9 +253,9 @@ class Uri {
    * @example
    * ```javascript
    * const uri = Uri.fromString("http://example.com/foo?p1=%E5%80%A41&p2=123");
-   * 
-   * uri.rawQuery;
-   * // → "p1=%E5%80%A41&p2=123"
+   * const query = uri.rawQuery;
+   * // query
+   * //   → "p1=%E5%80%A41&p2=123"
    * ```
    */
   get rawQuery(): string {
@@ -263,22 +263,21 @@ class Uri {
   }
 
   /**
-   * Gets the result of parsing the query for this instance in the application/x-www-form-urlencoded format.
+   * Gets the result of parsing the query for this instance in the `application/x-www-form-urlencoded` format.
    * 
    * @example
    * ```javascript
    * const uri = Uri.fromString("http://example.com/foo?p1=%E5%80%A41&p2=123");
-   * 
-   * uri.query;
-   * // → [ [ "p1", "値1" ], [ "p2", "123" ] ]
+   * const queryEntries = uri.query;
+   * // queryEntries
+   * //   → [ [ "p1", "値1" ], [ "p2", "123" ] ]
    * ```
-   * 
    * @example
    * ```javascript
    * const uri = Uri.fromString("http://example.com/foo?textformat");
-   * 
-   * uri.query;
-   * // → [ [ "textformat", "" ] ]
+   * const queryEntries = uri.query;
+   * // queryEntries
+   * //   → [ [ "textformat", "" ] ]
    * ```
    */
   get query(): Array<Uri.QueryParameter> {
@@ -360,7 +359,7 @@ class Uri {
   }
 
   /**
-   * @returns The `URL` object.
+   * @returns A new `URL` object.
    */
   toURL(): URL {
     return new URL(this.#normalizedUri.toString());
@@ -444,6 +443,20 @@ class Uri {
    * 
    * @param fragment The fragment. No need to prepend a `"#"` to fragment.
    * @returns A new `Uri` instance.
+   * @example
+   * ```javascript
+   * const uri = Uri.fromString("http://example.com/foo");
+   * const uriWithFragment = uri.withFragment("素片");
+   * // uriWithFragment.toString()
+   * //   → "http://example.com/foo#%E7%B4%A0%E7%89%87"
+   * ```
+   * @example
+   * ```javascript
+   * const uri = Uri.fromString("http://example.com/foo#%E7%B4%A0%E7%89%87");
+   * const uriWithFragment = uri.withFragment("svgView(viewBox(0,0,100,100))");
+   * // uriWithFragment.toString()
+   * //   → "http://example.com/foo#svgView(viewBox(0,0,100,100))"
+   * ```
    */
   withFragment(fragment: string): Uri {
     const work = this.toURL();
@@ -460,6 +473,13 @@ class Uri {
    * Returns a new `Uri` instance with the fragment removed.
    * 
    * @returns A new `Uri` instance.
+   * @example
+   * ```javascript
+   * const uri = Uri.fromString("http://example.com/foo#%E7%B4%A0%E7%89%87");
+   * const uriWithoutFragment = uri.withoutFragment();
+   * // uriWithoutFragment.toString()
+   * //   → "http://example.com/foo"
+   * ```
    */
   withoutFragment(): Uri {
     const work = this.toURL();
