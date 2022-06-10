@@ -137,9 +137,9 @@ class Uri {
    * @example
    * ```javascript
    * const uri = Uri.fromString("http://xn--eckwd4c7cu47r2wf.jp/foo");
-   * 
-   * uri.rawHost;
-   * // → "xn--eckwd4c7cu47r2wf.jp"
+   * const host = uri.rawHost;
+   * // host
+   * //   → "xn--eckwd4c7cu47r2wf.jp"
    * ```
    */
   get rawHost(): string {
@@ -153,8 +153,9 @@ class Uri {
    * ```javascript
    * const uri = Uri.fromString("http://xn--eckwd4c7cu47r2wf.jp/foo");
    * 
-   * uri.host;
-   * // → "ドメイン名例.jp"
+   * const punycodeDecodedHost = uri.host;
+   * // punycodeDecodedHost
+   * //   → "ドメイン名例.jp"
    * ```
    */
   get host(): string {
@@ -297,9 +298,9 @@ class Uri {
    * @example
    * ```javascript
    * const uri = Uri.fromString("http://example.com/foo#%E7%B4%A0%E7%89%87");
-   * 
-   * uri.rawFragment;
-   * // → "%E7%B4%A0%E7%89%87"
+   * const fragment = uri.rawFragment;
+   * // fragment
+   * //   → "%E7%B4%A0%E7%89%87"
    * ```
    */
   get rawFragment(): string {
@@ -312,9 +313,9 @@ class Uri {
    * @example
    * ```javascript
    * const uri = Uri.fromString("http://example.com/foo#%E7%B4%A0%E7%89%87");
-   * 
-   * uri.fragment;
-   * // → "素片"
+   * const percentDecodedFragment = uri.fragment;
+   * // percentDecodedFragment
+   * //   → "素片"
    * ```
    */
   get fragment(): string {
