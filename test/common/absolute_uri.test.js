@@ -495,12 +495,30 @@ describe("Uri.prototype.originEquals", () => {
 
 });
 
-describe("Uri.prototype.withoutUserInfo", () => {
-  it("withoutUserInfo()", () => {
-    const u1 = Uri.fromString("http://usr@example.com:80/hoge?a=1#a").withoutUserInfo();
+describe("Uri.prototype.hasCredentials", () => {
+  it("hasCredentials()", () => {
+    const u1 = Uri.fromString("http://usr@example.com:80/hoge?a=1#a").hasCredentials();
+    expect(u1).to.equal(true);
+
+    const u2 = Uri.fromString("http://usr:pwd@example.com:80/hoge?a=1#a").hasCredentials();
+    expect(u2).to.equal(true);
+
+    const u3 = Uri.fromString("http://:pwd@example.com:80/hoge?a=1#a").hasCredentials();
+    expect(u3).to.equal(true);
+
+    const u4 = Uri.fromString("http://:@example.com:80/hoge?a=1#a").hasCredentials();
+    expect(u4).to.equal(false);
+
+  });
+
+});
+
+describe("Uri.prototype.withoutCredentials", () => {
+  it("withoutCredentials()", () => {
+    const u1 = Uri.fromString("http://usr@example.com:80/hoge?a=1#a").withoutCredentials();
     expect(u1.toString()).to.equal("http://example.com/hoge?a=1#a");
 
-    const u2 = Uri.fromString("http://usr:pwd@example.com:80/hoge?a=1#a").withoutUserInfo();
+    const u2 = Uri.fromString("http://usr:pwd@example.com:80/hoge?a=1#a").withoutCredentials();
     expect(u2.toString()).to.equal("http://example.com/hoge?a=1#a");
 
   });

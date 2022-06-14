@@ -103,32 +103,28 @@ class Uri {
     return this.#normalizedUri.protocol.replace(/:$/, "");
   }
 
-  // /**
-  //  * Gets the username for this instance.
-  //  */
-  // get rawUsername(): string {
-  //   return this.#normalizedUri.username;
-  // }
+  /**
+   * Gets the username for this instance.
+   */
+  get rawUserName(): string {
+    return this.#normalizedUri.username;
+  }
 
-  // /**
-  //  * Gets the decoded username for this instance.
-  //  */
-  // get username(): string {
-  //   return globalThis.decodeURIComponent(this.rawUsername); おそらくURIErrorになる場合がある
-  // }
+  /**
+   * Gets the password for this instance.
+   */
+  get rawPassword(): string {
+    return this.#normalizedUri.password;
+  }
 
-  // /**
-  //  * Gets the password for this instance.
-  //  */
-  // get rawPassword() {
-  //   return this.#normalizedUri.password;
-  // }
-
-  // /**
-  //  * Gets the decoded password for this instance.
-  //  */
-  // get password() {
-  //   return globalThis.decodeURIComponent(this.rawPassword); おそらくURIErrorになる場合がある
+  // get credentials(): Uri.Credentials {
+  //   const userName = ByteSequence.fromPercentEncoded(this.rawUserName).utf8DecodeTo();
+  //   const password = ByteSequence.fromPercentEncoded(this.rawPassword).utf8DecodeTo();
+  //   // return globalThis.decodeURIComponent(***); だと、URIErrorになる場合がある
+  //   return {
+  //     userName,
+  //     password,
+  //   }
   // }
 
   /**
@@ -403,9 +399,24 @@ class Uri {
   // resolve(relativeUri: string): Uri {
   // }
 
-  // hasUserInfo(): boolean {
-  //   return 
-  // }
+  #hasUserName(): boolean {
+    const rawUserName = this.rawUserName;
+    return ((typeof rawUserName === "string") && (rawUserName.length > 0));
+  }
+
+  #hasPassword(): boolean {
+    const rawPassword = this.rawPassword;
+    return ((typeof rawPassword === "string") && (rawPassword.length > 0));
+  }
+
+  /**
+   * Returns whether this instance has a username or password.
+   * 
+   * @returns Whether this instance has a username or password.
+   */
+  hasCredentials(): boolean {
+    return ((this.#hasUserName() === true) || (this.#hasPassword() === true));
+  }
 
   /**
    * Returns a new `Uri` instance with the user and password removed.
@@ -414,12 +425,12 @@ class Uri {
    * @example
    * ```javascript
    * const uri = Uri.fromString("http://usr:pwd@example.com/foo");
-   * const uriWithoutUserInfo = uri.withoutUserInfo();
-   * // uriWithoutUserInfo.toString()
+   * const uriWithoutCredentials = uri.withoutCredentials();
+   * // uriWithoutCredentials.toString()
    * //   → "http://example.com/foo"
    * ```
    */
-  withoutUserInfo(): Uri {
+  withoutCredentials(): Uri {
     const work = this.toURL();
     work.username = "";
     work.password = "";
@@ -443,7 +454,8 @@ class Uri {
    * ```
    */
   hasQuery(): boolean {
-    return (this.rawQuery !== "");
+    const rawQuery = this.rawQuery;
+    return ((typeof rawQuery === "string") && (rawQuery.length > 0));
   }
 
   /**
@@ -509,7 +521,8 @@ class Uri {
    * ```
    */
   hasFragment(): boolean {
-    return (this.rawFragment !== "");
+    const rawFragment = this.rawFragment;
+    return ((typeof rawFragment === "string") && (rawFragment.length > 0));
   }
 
   /**
@@ -564,6 +577,10 @@ class Uri {
 
 namespace Uri {
   export type QueryParameter = [ name: string, value: string ];
+  export type Credentials = {
+    userName: string,
+    password: string,
+  };
 }
 
 Object.freeze(Uri);
