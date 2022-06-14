@@ -495,6 +495,36 @@ describe("Uri.prototype.originEquals", () => {
 
 });
 
+describe("Uri.prototype.withoutUserInfo", () => {
+  it("withoutUserInfo()", () => {
+    const u1 = Uri.fromString("http://usr@example.com:80/hoge?a=1#a").withoutUserInfo();
+    expect(u1.toString()).to.equal("http://example.com/hoge?a=1#a");
+
+    const u2 = Uri.fromString("http://usr:pwd@example.com:80/hoge?a=1#a").withoutUserInfo();
+    expect(u2.toString()).to.equal("http://example.com/hoge?a=1#a");
+
+  });
+  
+});
+
+describe("Uri.prototype.hasQuery", () => {
+  it("hasQuery()", () => {
+    const u1 = Uri.fromString("http://example.com:80/hoge?a=1#a").hasQuery();
+    expect(u1).to.equal(true);
+
+    const u2 = Uri.fromString("http://example.com:80/hoge?a").hasQuery();
+    expect(u2).to.equal(true);
+
+    const u6 = Uri.fromString("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6").hasQuery();
+    expect(u6).to.equal(false);
+
+    const u7 = Uri.fromString("data:,Hello%2C%20World!").hasQuery();
+    expect(u7).to.equal(false);
+
+  });
+
+});
+
 describe("Uri.prototype.withQuery", () => {
   it("withQuery(Array<string>)", () => {
     const u0 = Uri.fromString("http://example.com:80/hoge?a=1").withQuery([]);
@@ -557,6 +587,24 @@ describe("Uri.prototype.withoutQuery", () => {
 
     const u7 = Uri.fromString("data:,Hello%2C%20World!").withoutQuery();
     expect(u7.toString()).to.equal("data:,Hello%2C%20World!");
+
+  });
+
+});
+
+describe("Uri.prototype.hasFragment", () => {
+  it("hasFragment()", () => {
+    const u1 = Uri.fromString("http://example.com:80/hoge?a=1#a").hasFragment();
+    expect(u1).to.equal(true);
+
+    const u2 = Uri.fromString("http://example.com:80/hoge?a").hasFragment();
+    expect(u2).to.equal(false);
+
+    const u6 = Uri.fromString("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6").hasFragment();
+    expect(u6).to.equal(false);
+
+    const u7 = Uri.fromString("data:,Hello%2C%20World!").hasFragment();
+    expect(u7).to.equal(false);
 
   });
 

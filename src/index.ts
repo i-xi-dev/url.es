@@ -52,11 +52,11 @@ class Uri {
   #normalizedUri: URL;
 
   private constructor(uri: URL) {
-    // searchが"?"のみの場合、ブラウザによってはgetterでは""になるのに、実際は"?"だけ残るので統一する
+    // searchが"?"のみの場合、ブラウザによってはgetterでは""になるのに、実際は"?"だけ残るので""にする
     if (uri.search === "") {
       uri.search = "";
     }
-    // hashが"#"のみの場合、ブラウザによってはgetterでは""になるのに、実際は"#"だけ残るので統一する
+    // hashが"#"のみの場合、ブラウザによってはgetterでは""になるのに、実際は"#"だけ残るので""にする
     if (uri.hash === "") {
       uri.hash = "";
     }
@@ -152,7 +152,6 @@ class Uri {
    * @example
    * ```javascript
    * const uri = Uri.fromString("http://xn--eckwd4c7cu47r2wf.jp/foo");
-   * 
    * const punycodeDecodedHost = uri.host;
    * // punycodeDecodedHost
    * //   → "ドメイン名例.jp"
@@ -204,7 +203,6 @@ class Uri {
    * // port
    * //   → 80
    * ```
-   * 
    * @example
    * ```javascript
    * const uri = Uri.fromString("http://example.com:8080/foo");
@@ -405,9 +403,48 @@ class Uri {
   // resolve(relativeUri: string): Uri {
   // }
 
+  // hasUserInfo(): boolean {
+  //   return 
+  // }
+
+  /**
+   * Returns a new `Uri` instance with the user and password removed.
+   * 
+   * @returns A new `Uri` instance.
+   * @example
+   * ```javascript
+   * const uri = Uri.fromString("http://usr:pwd@example.com/foo");
+   * const uriWithoutUserInfo = uri.withoutUserInfo();
+   * // uriWithoutUserInfo.toString()
+   * //   → "http://example.com/foo"
+   * ```
+   */
+  withoutUserInfo(): Uri {
+    const work = this.toURL();
+    work.username = "";
+    work.password = "";
+    return new Uri(work);
+  }
+
   // withPath(): Uri {
   //   throw new Error("not implemented");
   // }
+
+  /**
+   * Returns whether this instance has query parameters.
+   * 
+   * @returns Whether this instance has query parameters.
+   * @example
+   * ```javascript
+   * const uri = Uri.fromString("http://example.com/foo?p1=%E5%80%A41&p2=123");
+   * const uriHasQuery = uri.hasQuery();
+   * // uriHasQuery
+   * //   → true
+   * ```
+   */
+  hasQuery(): boolean {
+    return (this.rawQuery !== "");
+  }
 
   /**
    * Return a new `Uri` instance with the query set.
@@ -457,6 +494,22 @@ class Uri {
     const work = this.toURL();
     work.search = "";
     return new Uri(work);
+  }
+
+  /**
+   * Returns whether this instance has a fragment.
+   * 
+   * @returns Whether this instance has a fragment.
+   * @example
+   * ```javascript
+   * const uri = Uri.fromString("http://example.com/foo#%E7%B4%A0%E7%89%87");
+   * const uriHasFragment = uri.hasFragment();
+   * // uriHasFragment
+   * //   → true
+   * ```
+   */
+  hasFragment(): boolean {
+    return (this.rawFragment !== "");
   }
 
   /**
