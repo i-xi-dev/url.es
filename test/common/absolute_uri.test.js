@@ -1,7 +1,59 @@
 import { expect } from '@esm-bundle/chai';
 import { Uri } from "../../dist/index.js";
 
-//TODO fromString,fromURL
+describe("Uri.fromString", () => {
+  it("fromString(string)", () => {
+    const u0 = Uri.fromString("http://example.com:8080/a/b/../c");
+    expect(u0.toString()).to.equal("http://example.com:8080/a/c");
+
+  });
+
+  it("fromString(*)", () => {
+    expect(() => {
+      Uri.fromString(1);
+    }).to.throw(TypeError, "urlString").with.property("name", "TypeError");
+
+  });
+
+});
+
+describe("Uri.fromURL", () => {
+  it("fromURL(URL)", () => {
+    const u0 = Uri.fromURL(new URL("http://example.com:8080/a/b/../c"));
+    expect(u0.toString()).to.equal("http://example.com:8080/a/c");
+
+  });
+
+  it("fromURL(*)", () => {
+    expect(() => {
+      Uri.fromURL(1);
+    }).to.throw(TypeError, "url").with.property("name", "TypeError");
+
+  });
+
+});
+
+describe("Uri.from", () => {
+  it("from(string)", () => {
+    const u0 = Uri.from("http://example.com:8080/a/b/../c");
+    expect(u0.toString()).to.equal("http://example.com:8080/a/c");
+
+  });
+
+  it("from(URL)", () => {
+    const u0 = Uri.from(new URL("http://example.com:8080/a/b/../c"));
+    expect(u0.toString()).to.equal("http://example.com:8080/a/c");
+
+  });
+
+  it("from(*)", () => {
+    expect(() => {
+      Uri.from(1);
+    }).to.throw(TypeError, "url").with.property("name", "TypeError");
+
+  });
+
+});
 
 describe("Uri.prototype.scheme", () => {
   it("scheme", () => {

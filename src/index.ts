@@ -68,24 +68,48 @@ class Uri {
   /**
    * Creates a new `Uri` instance from the specified string representation of an absolute URL.
    * 
-   * @param str A string representing an absolute URL.
+   * @param urlString A string representing an absolute URL.
    * @returns A `Uri` instance.
-   * @throws {TypeError} The `value` is not an absolute URL.
+   * @throws {TypeError} The `urlString` is not a string that represents an absolute URL.
    */
-  static fromString(str: string): Uri {
-    const value = new URL(str); // URLでなければエラー、加えて最近の実装は相対URLの場合もエラー
-    return new Uri(value);
+  static fromString(urlString: string): Uri {
+    if (typeof urlString === "string") {
+      const value = new URL(urlString); // URLでなければエラー、加えて最近の実装は相対URLの場合もエラー
+      return new Uri(value);
+    }
+    throw new TypeError("urlString");
   }
 
   /**
    * Creates a new `Uri` instance from the specified `URL`.
    * 
-   * @param url A URL.
+   * @param url A `URL`.
    * @returns A `Uri` instance.
+   * @throws {TypeError} The `url` is not a `URL` object.
    */
   static fromURL(url: URL): Uri {
-    const value = new URL(url.toString());
-    return new Uri(value);
+    if (url instanceof URL) {
+      const value = new URL(url.toString());
+      return new Uri(value);
+    }
+    throw new TypeError("url");
+  }
+
+  /**
+   * Creates a new `Uri` instance from the specified absolute URL.
+   * 
+   * @param url A `URL` or string that represents an absolute URL.
+   * @returns A `Uri` instance.
+   * @throws {TypeError} The `url` is not a `URL` object or string.
+   */
+  static from(url: string | URL): Uri {
+    if (url instanceof URL) {
+      return Uri.fromURL(url);
+    }
+    else if (typeof url === "string") {
+      return Uri.fromString(url);
+    }
+    throw new TypeError("url");
   }
 
   /**
@@ -120,7 +144,7 @@ class Uri {
   // get credentials(): Uri.Credentials {
   //   const userName = ByteSequence.fromPercentEncoded(this.rawUserName).utf8DecodeTo();
   //   const password = ByteSequence.fromPercentEncoded(this.rawPassword).utf8DecodeTo();
-  //   // return globalThis.decodeURIComponent(***); だと、URIErrorになる場合がある
+  //   // xxx = globalThis.decodeURIComponent(***); だと、URIErrorになる場合がある
   //   return {
   //     userName,
   //     password,
