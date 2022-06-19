@@ -3,11 +3,6 @@
 A JavaScript immutable object that represents the normalized absolute [URL](https://url.spec.whatwg.org/).
 
 
-## Documentation
-
-[https://i-xi-dev.github.io/url.es/](https://i-xi-dev.github.io/url.es/)
-
-
 ## Requirement
 `Uri` delegates the URL parsing to the [`URL`](https://developer.mozilla.org/en-US/docs/Web/API/URL).
 
@@ -39,9 +34,11 @@ import { Uri } from "https://cdn.skypack.dev/@i-xi-dev/url";
 ```
 
 
-## Example
+## Usage
 
-### For URL rendering
+### [`Uri`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/url.es/2.1.0/mod.ts/~/Uri) class
+
+For URL rendering
 
 ```javascript
 const url = Uri.fromString("http://xn--eckwd4c7cu47r2wf.jp/foo?p1=%E5%80%A41&p2=%E5%80%A42#%E7%B4%A0%E7%89%87");

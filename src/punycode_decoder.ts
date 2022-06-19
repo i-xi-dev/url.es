@@ -1,8 +1,6 @@
-// 
+//
 
-import {
-  type int,
-} from "@i-xi-dev/fundamental";
+import { type int } from "https://raw.githubusercontent.com/i-xi-dev/fundamental.es/7.0.1/src/int.ts";
 
 // RFC 3492のデコーダーのみ実装
 // URL#hostnameをデコードしたかっただけなので、正しくエンコードされた文字列のデコードのみ対応（オーバーフロー検出などは省いている）
@@ -37,7 +35,7 @@ export function _decodePunycode(input: string): string {
   // }
 
   const { basicString, extendedString } = _splitInput(input);
-  const output = [ ...basicString ];
+  const output = [...basicString];
 
   let n = _INITIAL_N;
   let i = 0;
@@ -54,9 +52,8 @@ export function _decodePunycode(input: string): string {
       let digit: int;
       if (value && (done !== true)) {
         digit = value.digit;
-        doLoopEnd = (value.isLast === true);
-      }
-      else {
+        doLoopEnd = value.isLast === true;
+      } else {
         // URL#hostnameをinputにする前提なので、エラーはありえないはず
         throw new Error("#1");
       }
@@ -71,7 +68,7 @@ export function _decodePunycode(input: string): string {
     }
 
     const currPos = output.length + 1;
-    bias = _adaptBias((i - oldi), currPos, (oldi === 0));
+    bias = _adaptBias(i - oldi, currPos, oldi === 0);
     n = n + Math.trunc(i / currPos); // 省略: overflow検出
     i = i % currPos;
 
@@ -86,7 +83,9 @@ export function _decodePunycode(input: string): string {
   // overflow検出を省いているので、呼び出し側で再エンコードしてinputと一致するかチェックすること
 }
 
-function _splitInput(input: string): { basicString: string, extendedString: string } {
+function _splitInput(
+  input: string,
+): { basicString: string; extendedString: string } {
   // URL#hostnameをinputにする前提なので、エラーはありえない
   // if (/^[\u0000-\u007F]*$/.test(input) !== true) {
   //   throw new RangeError("input");
@@ -98,8 +97,7 @@ function _splitInput(input: string): { basicString: string, extendedString: stri
   if (delimIndex < 0) {
     basicString = "";
     extendedString = input;
-  }
-  else {
+  } else {
     basicString = input.substring(0, delimIndex);
     extendedString = input.substring(delimIndex + 1);
   }
@@ -116,12 +114,14 @@ function _splitInput(input: string): { basicString: string, extendedString: stri
 }
 
 type _DigitIteratorResult = {
-  digit: int,
-  isLast: boolean,
+  digit: int;
+  isLast: boolean;
 };
 
-function* _digitIteratorOf(extendedString: string): Generator<_DigitIteratorResult, void, void> {
-  const codepoints = [ ...extendedString ].map((char) => char.charCodeAt(0));
+function* _digitIteratorOf(
+  extendedString: string,
+): Generator<_DigitIteratorResult, void, void> {
+  const codepoints = [...extendedString].map((char) => char.charCodeAt(0));
 
   let i: int;
   for (i = 0; i < codepoints.length; i++) {
@@ -145,8 +145,7 @@ function _digitValueOf(codepoint: int): int {
 function _computeThreshold(k: int, bias: int): int {
   if (k <= bias) {
     return _TMIN;
-  }
-  else if (k >= (bias + _TMAX)) {
+  } else if (k >= (bias + _TMAX)) {
     return _TMAX;
   }
   return k - bias;

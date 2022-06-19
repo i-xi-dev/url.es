@@ -1,8 +1,12 @@
 //
 
-import { Integer } from "@i-xi-dev/fundamental";
-import { ByteSequence } from "@i-xi-dev/bytes";
-import { _decodePunycode } from "./punycode_decoder";
+import {
+  Integer,
+} from "https://raw.githubusercontent.com/i-xi-dev/fundamental.es/7.0.1/src/int.ts"; //TODO import_mapにうつす（今はdeno docで読めない）
+
+import { Percent } from "https://raw.githubusercontent.com/i-xi-dev/percent.es/4.0.6/mod.ts";
+
+import { _decodePunycode } from "./punycode_decoder.ts";
 
 const _Scheme = {
   BLOB: "blob",
@@ -18,11 +22,11 @@ const _Scheme = {
  * デフォルトポート
  */
 const _DefaultPortMap: Map<string, number> = new Map([
-  [ _Scheme.FTP, 21 ],
-  [ _Scheme.HTTP, 80 ],
-  [ _Scheme.HTTPS, 443 ],
-  [ _Scheme.WS, 80 ],
-  [ _Scheme.WSS, 443 ],
+  [_Scheme.FTP, 21],
+  [_Scheme.HTTP, 80],
+  [_Scheme.HTTPS, 443],
+  [_Scheme.WS, 80],
+  [_Scheme.WSS, 443],
 ]);
 
 function _isUriQueryParameter(value: unknown): value is Uri.QueryParameter {
@@ -41,11 +45,13 @@ function _isUriQueryParameter(value: unknown): value is Uri.QueryParameter {
 
 const _NULL_ORIGIN = "null";
 
+const _utf8Decoder = new TextDecoder();
+
 /**
  * The normalized absolute URL
- * 
+ *
  * Instances of this class are immutable.
- * 
+ *
  * @see [URL Standard](https://url.spec.whatwg.org/)
  */
 class Uri {
@@ -67,7 +73,7 @@ class Uri {
 
   /**
    * Creates a new `Uri` instance from the specified string representation of an absolute URL.
-   * 
+   *
    * @param urlString A string representing an absolute URL.
    * @returns A `Uri` instance.
    * @throws {TypeError} The `urlString` is not a string that represents an absolute URL.
@@ -82,7 +88,7 @@ class Uri {
 
   /**
    * Creates a new `Uri` instance from the specified `URL`.
-   * 
+   *
    * @param url A `URL`.
    * @returns A `Uri` instance.
    * @throws {TypeError} The `url` is not a `URL` object.
@@ -97,7 +103,7 @@ class Uri {
 
   /**
    * Creates a new `Uri` instance from the specified absolute URL.
-   * 
+   *
    * @param url A `URL` or string that represents an absolute URL.
    * @returns A `Uri` instance.
    * @throws {TypeError} The `url` is not a `URL` object or string.
@@ -105,8 +111,7 @@ class Uri {
   static from(url: string | URL): Uri {
     if (url instanceof URL) {
       return Uri.fromURL(url);
-    }
-    else if (typeof url === "string") {
+    } else if (typeof url === "string") {
       return Uri.fromString(url);
     }
     throw new TypeError("url");
@@ -114,7 +119,7 @@ class Uri {
 
   /**
    * Gets the scheme name for this instance.
-   * 
+   *
    * @example
    * ```javascript
    * const uri = Uri.fromString("http://example.com/foo");
@@ -153,7 +158,7 @@ class Uri {
 
   /**
    * Gets the host for this instance.
-   * 
+   *
    * @example
    * ```javascript
    * const uri = Uri.fromString("http://xn--eckwd4c7cu47r2wf.jp/foo");
@@ -168,7 +173,7 @@ class Uri {
 
   /**
    * Gets the decoded host for this instance.
-   * 
+   *
    * @example
    * ```javascript
    * const uri = Uri.fromString("http://xn--eckwd4c7cu47r2wf.jp/foo");
@@ -183,15 +188,14 @@ class Uri {
       const decodedParts = parts.map((part) => {
         if (part.startsWith("xn--")) { // 小文字の"xn--"で判定しているのは、rawHostはURL#hostnameの前提だから。
           return _decodePunycode(part.substring(4));
-        }
-        else {
+        } else {
           return part;
         }
       });
       const decoded = decodedParts.join(".");
 
       // デコード結果をエンコードしたらthis.rawHostと等しくなるかチェック
-      const test = new URL(this.#normalizedUri);
+      const test = new URL(this.#normalizedUri.toString());
       test.hostname = decoded;
       if (test.hostname === this.rawHost) {
         // 等しければok。デコード結果を返す
@@ -205,7 +209,7 @@ class Uri {
 
   /**
    * Gets the port number for this instance.
-   * 
+   *
    * If the port number is omitted, returns the number in below table.
    * | `scheme` | number |
    * | :--- | ---: |
@@ -215,7 +219,7 @@ class Uri {
    * | `"ws"` | `80` |
    * | `"wss"` | `443` |
    * | others | `NaN` |
-   * 
+   *
    * @example
    * ```javascript
    * const uri = Uri.fromString("http://example.com/foo");
@@ -238,7 +242,10 @@ class Uri {
     }
 
     const defaultPort = _DefaultPortMap.get(this.scheme);
-    if ((typeof defaultPort === "number") && Integer.isNonNegativeInteger(defaultPort)) {
+    if (
+      (typeof defaultPort === "number") &&
+      Integer.isNonNegativeInteger(defaultPort)
+    ) {
       return defaultPort;
     }
     return Number.NaN;
@@ -267,7 +274,7 @@ class Uri {
 
   /**
    * Gets the query for this instance.
-   * 
+   *
    * @example
    * ```javascript
    * const uri = Uri.fromString("http://example.com/foo?p1=%E5%80%A41&p2=123");
@@ -282,7 +289,7 @@ class Uri {
 
   /**
    * Gets the result of parsing the query for this instance in the `application/x-www-form-urlencoded` format.
-   * 
+   *
    * @example
    * ```javascript
    * const uri = Uri.fromString("http://example.com/foo?p1=%E5%80%A41&p2=123");
@@ -311,7 +318,7 @@ class Uri {
 
   /**
    * Gets the fragment for this instance.
-   * 
+   *
    * @example
    * ```javascript
    * const uri = Uri.fromString("http://example.com/foo#%E7%B4%A0%E7%89%87");
@@ -326,7 +333,7 @@ class Uri {
 
   /**
    * Gets the decoded fragment for this instance.
-   * 
+   *
    * @example
    * ```javascript
    * const uri = Uri.fromString("http://example.com/foo#%E7%B4%A0%E7%89%87");
@@ -337,28 +344,31 @@ class Uri {
    */
   get fragment(): string {
     // return globalThis.decodeURIComponent(this.rawFragment); だと、URIErrorになる場合がある
-    return ByteSequence.fromPercentEncoded(this.rawFragment).utf8DecodeTo();
+    const bytes = Percent.decode(this.rawFragment);
+    return _utf8Decoder.decode(bytes);
   }
 
   /**
    * Gets the origin for this instance.
-   * 
+   *
    * If this scheme is `"blob"`, `"ftp"`, `"http"`, `"https"`, `"ws"`, `"wss"`, the value of `new URL(this.toString()).origin`
    * ; otherwise, `"null"`.
    */
   get origin(): string {
-    switch (this.scheme) {
-    case _Scheme.BLOB:
-    case _Scheme.FTP:
-    case _Scheme.HTTP:
-    case _Scheme.HTTPS:
-    case _Scheme.WS:
-    case _Scheme.WSS:
+    const originSchemes: Array<string> = [
+      _Scheme.BLOB,
+      _Scheme.FTP,
+      _Scheme.HTTP,
+      _Scheme.HTTPS,
+      _Scheme.WS,
+      _Scheme.WSS,
+    ];
+    if (originSchemes.includes(this.scheme) === true) {
       return this.#normalizedUri.origin;
-    default:
-      return _NULL_ORIGIN;
-        // fileスキームの場合に不透明なoriginとするかはブラウザによっても違う（たとえばChromeは"file://", Firefoxは"null"）。一括不透明とする
     }
+
+    return _NULL_ORIGIN;
+    // fileスキームの場合に不透明なoriginとするかはブラウザによっても違う（たとえばChromeは"file://", Firefoxは"null"）。一括不透明とする
   }
 
   /**
@@ -385,7 +395,7 @@ class Uri {
 
   /**
    * Determines whether this origin is equal to the origin of the absolute URL represented by another object.
-   * 
+   *
    * @param other An absolute URL.
    * @returns If this origin is equal to the origin of the specified absolute URL, `true`; otherwise, `false`.
    * @throws {TypeError} The `other` is not type of `Uri`, `URL`, or `string`.
@@ -394,14 +404,11 @@ class Uri {
     let otherUri: Uri;
     if (other instanceof Uri) {
       otherUri = other;
-    }
-    else if (other instanceof URL) {
+    } else if (other instanceof URL) {
       otherUri = Uri.fromURL(other);
-    }
-    else if (typeof other === "string") {
+    } else if (typeof other === "string") {
       otherUri = Uri.fromString(other);
-    }
-    else {
+    } else {
       throw new TypeError("other");
     }
 
@@ -435,7 +442,7 @@ class Uri {
 
   /**
    * Returns whether this instance has a username or password.
-   * 
+   *
    * @returns Whether this instance has a username or password.
    */
   hasCredentials(): boolean {
@@ -444,7 +451,7 @@ class Uri {
 
   /**
    * Returns a new `Uri` instance with the user and password removed.
-   * 
+   *
    * @returns A new `Uri` instance.
    * @example
    * ```javascript
@@ -467,7 +474,7 @@ class Uri {
 
   /**
    * Returns whether this instance has query parameters.
-   * 
+   *
    * @returns Whether this instance has query parameters.
    * @example
    * ```javascript
@@ -484,7 +491,7 @@ class Uri {
 
   /**
    * Return a new `Uri` instance with the query set.
-   * 
+   *
    * @param query The query parameters.
    * @returns A new `Uri` instance.
    * @example
@@ -504,11 +511,13 @@ class Uri {
    */
   withQuery(query: Array<Uri.QueryParameter>): Uri {
     const work = this.toURL();
-    if (Array.isArray(query) && query.every((entry) => _isUriQueryParameter(entry)) && (query.length > 0)) {
+    if (
+      Array.isArray(query) &&
+      query.every((entry) => _isUriQueryParameter(entry)) && (query.length > 0)
+    ) {
       const queryParams = new URLSearchParams(query);
       work.search = "?" + queryParams.toString();
-    }
-    else {
+    } else {
       work.search = "";
     }
     return new Uri(work);
@@ -516,7 +525,7 @@ class Uri {
 
   /**
    * Returns a new `Uri` instance with the query removed.
-   * 
+   *
    * @returns A new `Uri` instance.
    * @example
    * ```javascript
@@ -534,7 +543,7 @@ class Uri {
 
   /**
    * Returns whether this instance has a fragment.
-   * 
+   *
    * @returns Whether this instance has a fragment.
    * @example
    * ```javascript
@@ -551,7 +560,7 @@ class Uri {
 
   /**
    * Return a new `Uri` instance with the fragment set.
-   * 
+   *
    * @param fragment The fragment. No need to prepend a `"#"` to fragment.
    * @returns A new `Uri` instance.
    * @example
@@ -573,8 +582,7 @@ class Uri {
     const work = this.toURL();
     if ((typeof fragment === "string") && (fragment.length > 0)) {
       work.hash = "#" + fragment; // 0x20,0x22,0x3C,0x3E,0x60 の%エンコードは自動でやってくれる
-    }
-    else {
+    } else {
       work.hash = "";
     }
     return new Uri(work);
@@ -582,7 +590,7 @@ class Uri {
 
   /**
    * Returns a new `Uri` instance with the fragment removed.
-   * 
+   *
    * @returns A new `Uri` instance.
    * @example
    * ```javascript
@@ -600,15 +608,13 @@ class Uri {
 }
 
 namespace Uri {
-  export type QueryParameter = [ name: string, value: string ];
+  export type QueryParameter = [name: string, value: string];
   export type Credentials = {
-    userName: string,
-    password: string,
+    userName: string;
+    password: string;
   };
 }
 
 Object.freeze(Uri);
 
-export {
-  Uri,
-};
+export { Uri };
