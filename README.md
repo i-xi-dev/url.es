@@ -36,7 +36,7 @@ import { Uri } from "https://cdn.skypack.dev/@i-xi-dev/url";
 
 ## Usage
 
-### [`Uri`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/url.es/2.1.0/mod.ts/~/Uri) class
+### [`Uri`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/url.es/2.1.1/mod.ts/~/Uri) class
 
 For URL rendering
 

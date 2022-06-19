@@ -12,7 +12,7 @@ await build({
   rootTestDir: "./tests",
   package: {
     name: "@i-xi-dev/url",
-    version: "2.1.0",
+    version: "2.1.1",
     description: "A JavaScript immutable object that represents the normalized absolute URL.",
     license: "MIT",
     author: "i-xi-dev",

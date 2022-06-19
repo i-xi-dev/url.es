@@ -47,12 +47,18 @@ const _NULL_ORIGIN = "null";
 
 const _utf8Decoder = new TextDecoder();
 
+namespace Uri {
+  export type QueryParameter = [name: string, value: string];
+  export type Credentials = {
+    userName: string;
+    password: string;
+  };
+}
+
+// https://url.spec.whatwg.org/
 /**
- * The normalized absolute URL
- *
- * Instances of this class are immutable.
- *
- * @see [URL Standard](https://url.spec.whatwg.org/)
+ * The normalized absolute URL.
+ * The `Uri` instances are immutable.
  */
 class Uri {
   #normalizedUri: URL;
@@ -605,14 +611,6 @@ class Uri {
     work.hash = "";
     return new Uri(work);
   }
-}
-
-namespace Uri {
-  export type QueryParameter = [name: string, value: string];
-  export type Credentials = {
-    userName: string;
-    password: string;
-  };
 }
 
 Object.freeze(Uri);
