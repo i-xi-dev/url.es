@@ -1,40 +1,45 @@
 import { assertStrictEquals, assertThrows } from "std/testing/asserts";
 import { Uri } from "../src/url.ts";
 
-Deno.test("Uri.fromString", () => {
-  // fromString(string)
+Deno.test("Uri.fromString(string)", () => {
   const u0 = Uri.fromString("http://example.com:8080/a/b/../c");
   assertStrictEquals(u0.toString(), "http://example.com:8080/a/c");
 
-  // fromString(*)
+});
+
+Deno.test("Uri.fromString(*)", () => {
   assertThrows(() => {
     Uri.fromString(1 as unknown as string);
   }, TypeError, "urlString");
 
 });
 
-Deno.test("Uri.fromURL", () => {
-  // fromURL(URL)
+Deno.test("Uri.fromURL(URL)", () => {
   const u0 = Uri.fromURL(new URL("http://example.com:8080/a/b/../c"));
   assertStrictEquals(u0.toString(), "http://example.com:8080/a/c");
 
-  // fromURL(*)
+});
+
+Deno.test("Uri.fromURL(*)", () => {
   assertThrows(() => {
     Uri.fromURL(1 as unknown as URL);
   }, TypeError, "url");
 
 });
 
-Deno.test("Uri.from", () => {
-  // from(string)
+Deno.test("Uri.from(string)", () => {
   const u0 = Uri.from("http://example.com:8080/a/b/../c");
   assertStrictEquals(u0.toString(), "http://example.com:8080/a/c");
 
-  // from(URL)
+});
+
+Deno.test("Uri.from(URL)", () => {
   const u0B = Uri.from(new URL("http://example.com:8080/a/b/../c"));
   assertStrictEquals(u0B.toString(), "http://example.com:8080/a/c");
 
-  // from(*)
+});
+
+Deno.test("Uri.from(*)", () => {
   assertThrows(() => {
     Uri.from(1 as unknown as URL);
   }, TypeError, "url");
@@ -42,7 +47,6 @@ Deno.test("Uri.from", () => {
 });
 
 Deno.test("Uri.prototype.scheme", () => {
-  // scheme
   const u0 = Uri.fromString("http://example.com:8080/");
   const u0b = Uri.fromString("Http://example.COM:8080/");
   const u1 = Uri.fromString("http://example.com:80/hoge");
@@ -69,7 +73,6 @@ Deno.test("Uri.prototype.scheme", () => {
 });
 
 Deno.test("Uri.prototype.rawHost", () => {
-  // rawHost
   const u0 = Uri.fromString("http://example.com:8080/");
   const u0b = Uri.fromString("Http://example.COM:8080/");
   const u1 = Uri.fromString("http://example.com:80/hoge");
@@ -113,7 +116,6 @@ Deno.test("Uri.prototype.rawHost", () => {
 });
 
 Deno.test("Uri.prototype.host", () => {
-  // host
   const u0 = Uri.fromString("http://example.com:8080/");
   const u0b = Uri.fromString("Http://example.COM:8080/");
   const u1 = Uri.fromString("http://example.com:80/hoge");
@@ -157,7 +159,6 @@ Deno.test("Uri.prototype.host", () => {
 });
 
 Deno.test("Uri.prototype.port", () => {
-  // port
   const a0 = Uri.fromString("http://example.com/");
   const u0 = Uri.fromString("http://example.com:8080/");
   const u0b = Uri.fromString("Http://example.COM:8080/");
@@ -186,7 +187,6 @@ Deno.test("Uri.prototype.port", () => {
 });
 
 Deno.test("Uri.prototype.rawPath", () => {
-  // rawPath
   const u0 = Uri.fromString("http://example.com:8080/");
   const u0b = Uri.fromString("Http://example.COM:8080/");
   const u1 = Uri.fromString("http://example.com:80/hoge");
@@ -212,7 +212,6 @@ Deno.test("Uri.prototype.rawPath", () => {
 //TODO path
 
 Deno.test("Uri.prototype.rawQuery", () => {
-  // rawQuery
   const u0 = Uri.fromString("http://example.com:8080/");
   const u0b = Uri.fromString("Http://example.COM:8080/");
   const u1 = Uri.fromString("http://example.com:80/hoge");
@@ -249,7 +248,6 @@ Deno.test("Uri.prototype.rawQuery", () => {
 });
 
 Deno.test("Uri.prototype.query", () => {
-  // query
   const u0 = Uri.fromString("http://example.com:8080/");
   const u0b = Uri.fromString("Http://example.COM:8080/");
   const u1 = Uri.fromString("http://example.com:80/hoge");
@@ -286,7 +284,6 @@ Deno.test("Uri.prototype.query", () => {
 });
 
 Deno.test("Uri.prototype.rawFragment", () => {
-  // rawFragment
   const u0 = Uri.fromString("http://example.com:8080/");
   const u0b = Uri.fromString("Http://example.COM:8080/");
   const u1 = Uri.fromString("http://example.com:80/hoge");
@@ -316,7 +313,6 @@ Deno.test("Uri.prototype.rawFragment", () => {
 });
 
 Deno.test("Uri.prototype.fragment", () => {
-  // fragment
   const u0 = Uri.fromString("http://example.com:8080/");
   const u0b = Uri.fromString("Http://example.COM:8080/");
   const u1 = Uri.fromString("http://example.com:80/hoge");
@@ -347,7 +343,6 @@ Deno.test("Uri.prototype.fragment", () => {
 });
 
 Deno.test("Uri.prototype.origin", () => {
-  // origin
   const u0 = Uri.fromString("http://example.com:8080/");
   const u0b = Uri.fromString("Http://example.COM:8080/");
   const u1 = Uri.fromString("http://example.com:80/hoge");
@@ -374,8 +369,7 @@ Deno.test("Uri.prototype.origin", () => {
 
 });
 
-Deno.test("Uri.prototype.toString", () => {
-  // toString()
+Deno.test("Uri.prototype.toString()", () => {
   const u0 = Uri.fromString("http://example.com:8080/");
   const u0b = Uri.fromString("Http://example.COM:8080/");
   const u1 = Uri.fromString("http://example.com:80/hoge");
@@ -410,22 +404,19 @@ Deno.test("Uri.prototype.toString", () => {
 
 });
 
-Deno.test("Uri.prototype.toJSON", () => {
-  // toJSON()
+Deno.test("Uri.prototype.toJSON()", () => {
   const u0 = Uri.fromString("http://example.com:8080/");
   assertStrictEquals(u0.toJSON(), "http://example.com:8080/");
 
 });
 
-Deno.test("Uri.prototype.toURL", () => {
-  // toURL()
+Deno.test("Uri.prototype.toURL()", () => {
   const u0 = Uri.fromString("http://example.com:8080/");
   assertStrictEquals(u0.toURL().href, "http://example.com:8080/");
 
 });
 
-Deno.test("Uri.prototype.originEquals", () => {
-  // originEquals(Uri)
+Deno.test("Uri.prototype.originEquals(Uri)", () => {
   const u0A = Uri.fromString("http://example.com:8080/");
   const u0Ab = Uri.fromString("Http://example.COM:8080/");
   const u1A = Uri.fromString("http://example.com:80/hoge");
@@ -445,7 +436,9 @@ Deno.test("Uri.prototype.originEquals", () => {
   assertStrictEquals(u5A.originEquals(u6A), false);
   assertStrictEquals(u6A.originEquals(u6A), false);
 
-  // originEquals(URL)
+});
+
+Deno.test("Uri.prototype.originEquals(URL)", () => {
   const u0B = Uri.fromString("http://example.com:8080/");
   const u0Bb = Uri.fromString("Http://example.COM:8080/");
   const u1B = Uri.fromString("http://example.com:80/hoge");
@@ -465,7 +458,9 @@ Deno.test("Uri.prototype.originEquals", () => {
   assertStrictEquals(u5B.originEquals(u6B.toURL()), false);
   assertStrictEquals(u6B.originEquals(u6B.toURL()), false);
 
-  // originEquals(string)
+});
+
+Deno.test("Uri.prototype.originEquals(string)", () => {
   const u0 = Uri.fromString("http://example.com:8080/");
   const u0b = Uri.fromString("Http://example.COM:8080/");
   const u1 = Uri.fromString("http://example.com:80/hoge");
@@ -488,15 +483,16 @@ Deno.test("Uri.prototype.originEquals", () => {
   assertStrictEquals(u1.originEquals("HTTP://EXAMPLE.COM/"), true);
   assertStrictEquals(u1.originEquals("HTTP://EXAMPLE.COM:80/"), true);
 
-  // originEquals(*)
+});
+
+Deno.test("Uri.prototype.originEquals(*)", () => {
   assertThrows(() => {
     Uri.fromString("http://example.com:8080/").originEquals(1 as unknown as string);
   }, TypeError, "other");
 
 });
 
-Deno.test("Uri.prototype.hasCredentials", () => {
-  // hasCredentials()
+Deno.test("Uri.prototype.hasCredentials()", () => {
   const u1 = Uri.fromString("http://usr@example.com:80/hoge?a=1#a").hasCredentials();
   assertStrictEquals(u1, true);
 
@@ -511,8 +507,7 @@ Deno.test("Uri.prototype.hasCredentials", () => {
 
 });
 
-Deno.test("Uri.prototype.withoutCredentials", () => {
-  // withoutCredentials()
+Deno.test("Uri.prototype.withoutCredentials()", () => {
   const u1 = Uri.fromString("http://usr@example.com:80/hoge?a=1#a").withoutCredentials();
   assertStrictEquals(u1.toString(), "http://example.com/hoge?a=1#a");
 
@@ -521,8 +516,7 @@ Deno.test("Uri.prototype.withoutCredentials", () => {
 
 });
 
-Deno.test("Uri.prototype.hasQuery", () => {
-  // hasQuery()
+Deno.test("Uri.prototype.hasQuery()", () => {
   const u1 = Uri.fromString("http://example.com:80/hoge?a=1#a").hasQuery();
   assertStrictEquals(u1, true);
 
@@ -537,8 +531,7 @@ Deno.test("Uri.prototype.hasQuery", () => {
 
 });
 
-Deno.test("Uri.prototype.withQuery", () => {
-  // withQuery(Array<string>)
+Deno.test("Uri.prototype.withQuery(Array<string>)", () => {
   const u0 = Uri.fromString("http://example.com:80/hoge?a=1").withQuery([]);
   assertStrictEquals(JSON.stringify(u0.query), '[]');
   assertStrictEquals(u0.toString(), "http://example.com/hoge");
@@ -571,7 +564,9 @@ Deno.test("Uri.prototype.withQuery", () => {
   assertStrictEquals(JSON.stringify(u7.query), '[["",""]]');
   assertStrictEquals(u7.toString(), "http://example.com/hoge?=");
 
-  // withQuery(Array<*>)
+});
+
+Deno.test("Uri.prototype.withQuery(Array<*>)", () => {
   const u1B = Uri.fromString("http://example.com:80/hoge?a=1").withQuery([["b",1] as unknown as [string,string]]);
   assertStrictEquals(JSON.stringify(u1B.query), '[]');
   assertStrictEquals(u1B.toString(), "http://example.com/hoge");
@@ -582,8 +577,7 @@ Deno.test("Uri.prototype.withQuery", () => {
 
 });
 
-Deno.test("Uri.prototype.withoutQuery", () => {
-  // withoutQuery()
+Deno.test("Uri.prototype.withoutQuery()", () => {
   const u1 = Uri.fromString("http://example.com:80/hoge?a=1#a").withoutQuery();
   assertStrictEquals(u1.toString(), "http://example.com/hoge#a");
 
@@ -598,8 +592,7 @@ Deno.test("Uri.prototype.withoutQuery", () => {
 
 });
 
-Deno.test("Uri.prototype.hasFragment", () => {
-  // hasFragment()
+Deno.test("Uri.prototype.hasFragment()", () => {
   const u1 = Uri.fromString("http://example.com:80/hoge?a=1#a").hasFragment();
   assertStrictEquals(u1, true);
 
@@ -614,8 +607,7 @@ Deno.test("Uri.prototype.hasFragment", () => {
 
 });
 
-Deno.test("Uri.prototype.withFragment", () => {
-  // withFragment(string)
+Deno.test("Uri.prototype.withFragment(string)", () => {
   const u1 = Uri.fromString("http://example.com:80/hoge#foo").withFragment("a");
   assertStrictEquals(u1.fragment, "a");
   assertStrictEquals(u1.toString(), "http://example.com/hoge#a");
@@ -646,8 +638,14 @@ Deno.test("Uri.prototype.withFragment", () => {
 
 });
 
-Deno.test("Uri.prototype.withoutFragment", () => {
-  // withoutFragment()
+Deno.test("Uri.prototype.withFragment(*)", () => {
+  const u1 = Uri.fromString("http://example.com:80/hoge#foo").withFragment(1 as unknown as string);
+  assertStrictEquals(u1.fragment, "");
+  assertStrictEquals(u1.toString(), "http://example.com/hoge");
+
+});
+
+Deno.test("Uri.prototype.withoutFragment()", () => {
   const u1 = Uri.fromString("http://example.com:80/hoge?a=1#").withoutFragment();
   assertStrictEquals(u1.fragment, "");
   assertStrictEquals(u1.toString(), "http://example.com/hoge?a=1");

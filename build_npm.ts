@@ -12,7 +12,7 @@ await build({
   rootTestDir: "./tests",
   package: {
     name: "@i-xi-dev/url",
-    version: "2.1.2",
+    version: "2.1.3",
     description: "A JavaScript immutable object that represents the normalized absolute URL.",
     license: "MIT",
     author: "i-xi-dev",
@@ -23,7 +23,8 @@ await build({
       "punycode-decode",
       "browser",
       "deno",
-      "nodejs"
+      "nodejs",
+      "zero-dependency",
     ],
     repository: {
       type: "git",

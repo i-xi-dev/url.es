@@ -4,14 +4,12 @@ A JavaScript immutable object that represents the normalized absolute [URL](http
 
 
 ## Requirement
-`Uri` delegates the URL parsing to the [`URL`](https://developer.mozilla.org/en-US/docs/Web/API/URL).
 
-- Chrome
-- Edge
-- Firefox
-- Safari
-- Deno
-- Node.js
+This module delegates the URL parsing to the [`URL`](https://developer.mozilla.org/en-US/docs/Web/API/URL).
+
+| Chrome | Edge | Firefox | Safari | Deno | Node.js |
+| :---: | :---: | :---: | :---: | :---: | :---: |
+| ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 
 ## Installation
@@ -23,20 +21,20 @@ $ npm i @i-xi-dev/url
 ```
 
 ```javascript
-import { Uri } from "@i-xi-dev/url";
+import { Uri } from "@i-xi-dev/url@2.1.3";
 ```
 
 ### CDN
 
 Example for Skypack
 ```javascript
-import { Uri } from "https://cdn.skypack.dev/@i-xi-dev/url";
+import { Uri } from "https://cdn.skypack.dev/@i-xi-dev/url@2.1.3";
 ```
 
 
 ## Usage
 
-### [`Uri`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/url.es/2.1.2/mod.ts/~/Uri) class
+### [`Uri`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/url.es/2.1.3/mod.ts/~/Uri) class
 
 For URL rendering
 
