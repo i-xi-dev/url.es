@@ -1,6 +1,6 @@
 //
 
-import { type int } from "https://raw.githubusercontent.com/i-xi-dev/fundamental.es/7.0.1/src/int.ts";
+type int = number;
 
 // RFC 3492のデコーダーのみ実装
 // URL#hostnameをデコードしたかっただけなので、正しくエンコードされた文字列のデコードのみ対応（オーバーフロー検出などは省いている）
