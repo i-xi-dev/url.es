@@ -1,7 +1,7 @@
 //
 
 import { Integer } from "https://raw.githubusercontent.com/i-xi-dev/int.es/1.0.0/mod.ts"; //TODO import_mapにうつす（今はdeno docで読めない）
-import { Percent } from "https://raw.githubusercontent.com/i-xi-dev/percent.es/4.0.7/mod.ts";
+import { Percent } from "https://raw.githubusercontent.com/i-xi-dev/percent.es/4.0.8/mod.ts";
 import { _decodePunycode } from "./punycode_decoder.ts";
 
 const _Scheme = {
