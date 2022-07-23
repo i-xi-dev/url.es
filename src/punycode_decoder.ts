@@ -1,5 +1,3 @@
-//
-
 type int = number;
 
 // RFC 3492のデコーダーのみ実装
@@ -16,7 +14,10 @@ const _INITIAL_N = 128;
 
 const _BASE_MINUS_TMIN = _BASE - _TMIN;
 
-// https://datatracker.ietf.org/doc/html/rfc3492#section-6.1
+/**
+ * Implements https://datatracker.ietf.org/doc/html/rfc3492#section-6.1
+ * @internal
+ */
 function _adaptBias(delta: int, numpoints: int, firsttime: boolean): int {
   delta = Math.trunc(delta / ((firsttime === true) ? _DAMP : 2));
   delta = delta + Math.trunc(delta / numpoints);
@@ -27,7 +28,10 @@ function _adaptBias(delta: int, numpoints: int, firsttime: boolean): int {
   return k + Math.trunc(((_BASE_MINUS_TMIN + 1) * delta) / (delta + _SKEW));
 }
 
-// https://datatracker.ietf.org/doc/html/rfc3492#section-6.2
+/**
+ * Implements https://datatracker.ietf.org/doc/html/rfc3492#section-6.2
+ * @internal
+ */
 export function _decodePunycode(input: string): string {
   // URL#hostnameをinputにする前提なので、エラーはありえない
   // if (typeof input !== "string") {

@@ -1,3 +1,1 @@
-//
-
-export { Uri } from "./src/url.ts";
+export * from "./src/url.ts";
