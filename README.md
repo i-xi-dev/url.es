@@ -21,20 +21,20 @@ $ npm i @i-xi-dev/url
 ```
 
 ```javascript
-import { Uri } from "@i-xi-dev/url@3.0.0";
+import { Uri } from "@i-xi-dev/url@3.0.1";
 ```
 
 ### CDN
 
 Example for Skypack
 ```javascript
-import { Uri } from "https://cdn.skypack.dev/@i-xi-dev/url@3.0.0";
+import { Uri } from "https://cdn.skypack.dev/@i-xi-dev/url@3.0.1";
 ```
 
 
 ## Usage
 
-### [`Uri`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/url.es/3.0.0/mod.ts/~/Uri) class
+### [`Uri.Absolute`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/url.es/3.0.1/mod.ts/~/Uri.Absolute) class
 
 For URL rendering
 
