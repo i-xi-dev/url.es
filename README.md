@@ -17,11 +17,11 @@ This module delegates the URL parsing to the [`URL`](https://developer.mozilla.o
 ### npm
 
 ```console
-$ npm i @i-xi-dev/url
+$ npm i @i-xi-dev/url@3.0.2
 ```
 
 ```javascript
-import { Uri } from "@i-xi-dev/url@3.0.2";
+import { Uri } from "@i-xi-dev/url";
 ```
 
 ### CDN
