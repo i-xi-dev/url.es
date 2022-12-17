@@ -1,5 +1,5 @@
-import { Integer } from "https://raw.githubusercontent.com/i-xi-dev/int.es/1.1.1/mod.ts";
-import { Percent } from "https://raw.githubusercontent.com/i-xi-dev/percent.es/4.0.11/mod.ts";
+import { Integer } from "i-xi-dev/int.es";
+import { Percent } from "i-xi-dev/percent.es";
 
 type int = number;
 

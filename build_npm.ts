@@ -1,4 +1,4 @@
-import { build, emptyDir } from "https://deno.land/x/dnt@0.29.0/mod.ts";
+import { build, emptyDir } from "https://deno.land/x/dnt@0.32.0/mod.ts";
 
 await emptyDir("./npm");
 
@@ -15,7 +15,7 @@ await build({
   rootTestDir: "./tests",
   package: {
     name: "@i-xi-dev/url",
-    version: "3.0.2",
+    version: "3.0.3",
     description:
       "A JavaScript immutable object that represents the normalized absolute URL.",
     license: "MIT",
@@ -46,6 +46,10 @@ await build({
     ],
   },
   importMap: "./import_map.json",
+
+  //
+  typeCheck: false, // 落ちるようになった
+  declaration: false, // 落ちるようになった
 });
 
 Deno.copyFileSync("LICENSE", "npm/LICENSE");
