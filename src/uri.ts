@@ -432,6 +432,9 @@ namespace Uri {
     // equals(): boolean {
     // }
 
+    // matches(URLPattern): boolean {
+    // }
+
     // relativize(relativePath: string): string {
     // }
 
