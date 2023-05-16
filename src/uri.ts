@@ -1,29 +1,6 @@
 import { Integer, Percent } from "../deps.ts";
 import { _PunycodeDecoder } from "./punycode.ts";
 
-const _Scheme = {
-  BLOB: "blob",
-  FILE: "file",
-  FTP: "ftp",
-  HTTP: "http",
-  HTTPS: "https",
-  WS: "ws",
-  WSS: "wss",
-} as const;
-
-/**
- * The default port numbers.
- *
- * @internal
- */
-const _DefaultPortMap: Map<string, number> = new Map([
-  [_Scheme.FTP, 21],
-  [_Scheme.HTTP, 80],
-  [_Scheme.HTTPS, 443],
-  [_Scheme.WS, 80],
-  [_Scheme.WSS, 443],
-]);
-
 function _isUriQueryParameter(value: unknown): value is Uri.QueryParameter {
   if (Array.isArray(value)) {
     const unknownArray = value as Array<unknown>;
@@ -43,6 +20,19 @@ const _NULL_ORIGIN = "null";
 const _utf8Decoder = new TextDecoder();
 
 namespace Uri {
+  export const Scheme = {
+    BLOB: "blob",
+    FILE: "file",
+    FTP: "ftp",
+    HTTP: "http",
+    HTTPS: "https",
+    WS: "ws",
+    WSS: "wss",
+  } as const;
+  export type Scheme = string;
+
+  export type PathSegment = string;
+
   /**
    * A query parameter represented as name-value pair.
    */
@@ -62,6 +52,29 @@ namespace Uri {
    * The `Absolute` instances are immutable.
    */
   export class Absolute {
+    /**
+     * The [special schemes](https://url.spec.whatwg.org/#special-scheme).
+     */
+    static readonly #SpecialSchemes: Array<string> = [
+      Scheme.FILE,
+      Scheme.FTP,
+      Scheme.HTTP,
+      Scheme.HTTPS,
+      Scheme.WS,
+      Scheme.WSS,
+    ];
+
+    /**
+     * The default port numbers.
+     */
+    static readonly #DefaultPortMap: Map<string, number> = new Map([
+      [Scheme.FTP, 21],
+      [Scheme.HTTP, 80],
+      [Scheme.HTTPS, 443],
+      [Scheme.WS, 80],
+      [Scheme.WSS, 443],
+    ]);
+
     #normalizedUri: URL;
 
     private constructor(uri: URL) {
@@ -135,7 +148,7 @@ namespace Uri {
      * //   → "http"
      * ```
      */
-    get scheme(): string {
+    get scheme(): Scheme {
       return this.#normalizedUri.protocol.replace(/:$/, "");
     }
 
@@ -248,7 +261,7 @@ namespace Uri {
         return Number.parseInt(specifiedString, 10);
       }
 
-      const defaultPort = _DefaultPortMap.get(this.scheme);
+      const defaultPort = Absolute.#DefaultPortMap.get(this.scheme);
       if (
         (typeof defaultPort === "number") &&
         Integer.isNonNegativeInteger(defaultPort)
@@ -265,19 +278,27 @@ namespace Uri {
       return this.#normalizedUri.pathname;
     }
 
-    // TODO URLオブジェクト内部でパスがリストなのか非リストなのかは知ることができないので、"/"で始まっていれば"/"で分割した結果を返す？
-    //     特別スキームの場合はリストと推定して良いだろうが、
-    //     では、"hogehogehoge:/test1/test2"は？ パスが"/"始まりなのでリスト？
-    //     その場合、"hogehogehoge:test1/test2"は？ 同じスキームなのに非リスト？
-    //     ↓
-    //     案1: 特別スキームの場合のみリストとみなす
-    //     案2: "/"で始まっていればリストとみなす
-    // /**
-    //  * Gets the path segments for this instance.
-    //  */
-    // get path() {
-    //   throw new Error("not implemented");
-    // }
+    // とりあえず、、、特別スキームの場合のみリストとみなす
+    /**
+     * Gets the path segments for this instance.
+     */
+    get path(): Array<Uri.PathSegment> {
+      if (this.#isSpecial() === true) {
+        const rawPath = this.rawPath;
+        if (rawPath.startsWith("/") === true) {
+          if (rawPath === "/") {
+            return [];
+          }
+          return rawPath.substring(1).split("/");
+        }
+        else {
+          return rawPath.split("/");
+        }
+      }
+      else {
+        return [this.rawPath];
+      }
+    }
 
     /**
      * Gets the query for this instance.
@@ -363,12 +384,12 @@ namespace Uri {
      */
     get origin(): string {
       const originSchemes: Array<string> = [
-        _Scheme.BLOB,
-        _Scheme.FTP,
-        _Scheme.HTTP,
-        _Scheme.HTTPS,
-        _Scheme.WS,
-        _Scheme.WSS,
+        Scheme.BLOB,
+        Scheme.FTP,
+        Scheme.HTTP,
+        Scheme.HTTPS,
+        Scheme.WS,
+        Scheme.WSS,
       ];
       if (originSchemes.includes(this.scheme) === true) {
         return this.#normalizedUri.origin;
@@ -426,6 +447,10 @@ namespace Uri {
         return false;
       }
       return this.origin === otherUri.origin;
+    }
+
+    #isSpecial(): boolean {
+      return Absolute.#SpecialSchemes.includes(this.scheme);// this.schemeは、URLオブジェクトが小文字に正規化する
     }
 
     // equals(): boolean {

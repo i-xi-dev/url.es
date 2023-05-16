@@ -1,4 +1,4 @@
-import { assertStrictEquals, assertThrows } from "./deps.ts";
+import { assertEquals, assertStrictEquals, assertThrows } from "./deps.ts";
 import { Uri } from "../mod.ts";
 
 Deno.test("Uri.Absolute.fromString(string)", () => {
@@ -346,7 +346,37 @@ Deno.test("Uri.Absolute.prototype.rawPath", () => {
   );
 });
 
-//TODO path
+Deno.test("Uri.Absolute.prototype.path", () => {
+  const u0 = Uri.Absolute.fromString("http://example.com:8080/");
+  const u0b = Uri.Absolute.fromString("Http://example.COM:8080/");
+  const u1 = Uri.Absolute.fromString("http://example.com:80/hoge");
+  const u2 = Uri.Absolute.fromString("https://example.com:80/hoge");
+  const u3 = Uri.Absolute.fromString("file:///D:/hoge/index.txt");
+  const u4 = Uri.Absolute.fromString(
+    "blob:https://whatwg.org/d0360e2f-caee-469f-9a2f-87d5b0456f6f",
+  );
+  const u5 = Uri.Absolute.fromString(
+    "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
+  );
+  const u6 = Uri.Absolute.fromString("data:,Hello%2C%20World!");
+
+  assertEquals(u0.path, []);
+  assertEquals(u0b.path, []);
+  assertEquals(u1.path, ["hoge"]);
+  assertEquals(u2.path, ["hoge"]);
+  assertEquals(u3.path, ["D:", "hoge", "index.txt"]);
+  assertEquals(
+    u4.path,
+    ["https://whatwg.org/d0360e2f-caee-469f-9a2f-87d5b0456f6f"],
+  );
+  assertEquals(u5.path, ["uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6"]);
+  assertEquals(u6.path, [",Hello%2C%20World!"]);
+
+  assertEquals(
+    Uri.Absolute.fromString("http://example.com:8080").path,
+    [],
+  );
+});
 
 Deno.test("Uri.Absolute.prototype.rawQuery", () => {
   const u0 = Uri.Absolute.fromString("http://example.com:8080/");
@@ -857,6 +887,16 @@ Deno.test("Uri.Absolute.prototype.originEquals(*)", () => {
     "other",
   );
 });
+
+// Deno.test("Uri.Absolute.prototype.isSpecial()", () => {
+//   assertStrictEquals(Uri.Absolute.fromString("http://example.com/").isSpecial(), true);
+//   assertStrictEquals(Uri.Absolute.fromString("https://example.com/").isSpecial(), true);
+//   assertStrictEquals(Uri.Absolute.fromString("ws://example.com/").isSpecial(), true);
+//   assertStrictEquals(Uri.Absolute.fromString("wss://example.com/").isSpecial(), true);
+//   assertStrictEquals(Uri.Absolute.fromString("ftp://example.com/").isSpecial(), true);
+//   assertStrictEquals(Uri.Absolute.fromString("file://example.com/").isSpecial(), true);
+//   assertStrictEquals(Uri.Absolute.fromString("blob:https://whatwg.org/d0360e2f-caee-469f-9a2f-87d5b0456f6f").isSpecial(), false);
+// });
 
 Deno.test("Uri.Absolute.prototype.hasCredentials()", () => {
   const u1 = Uri.Absolute.fromString("http://usr@example.com:80/hoge?a=1#a")
