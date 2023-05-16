@@ -1,5 +1,4 @@
-import { Integer } from "i-xi-dev/int.es";
-import { Percent } from "i-xi-dev/percent.es";
+import { Integer, Percent } from "../deps.ts";
 import { _PunycodeDecoder } from "./punycode.ts";
 
 const _Scheme = {
