@@ -283,21 +283,27 @@ namespace Uri {
      * Gets the path segments for this instance.
      */
     get path(): Array<Uri.PathSegment> {
+      let segments: Array<Uri.PathSegment> = [];
       if (this.#isSpecial() === true) {
         const rawPath = this.rawPath;
         if (rawPath.startsWith("/") === true) {
           if (rawPath === "/") {
-            return [];
+            //segments = [];
           }
-          return rawPath.substring(1).split("/");
+          else {
+            segments = rawPath.substring(1).split("/");
+          }
         }
         else {
-          return rawPath.split("/");
+          segments = rawPath.split("/");
         }
       }
       else {
-        return [this.rawPath];
+        segments = [this.rawPath];
       }
+
+      const bytesArray: Array<Uint8Array> = segments.map((s) => Percent.decode(s));
+      return bytesArray.map((b) => _utf8Decoder.decode(b));
     }
 
     /**
