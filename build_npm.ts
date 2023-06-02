@@ -1,10 +1,10 @@
-import { build, emptyDir } from "https://deno.land/x/dnt@0.35.0/mod.ts";
+import { build, emptyDir } from "https://deno.land/x/dnt@0.37.0/mod.ts";
 
 await emptyDir("./npm");
 
 await build({
   compilerOptions: {
-    lib: ["esnext", "dom"],
+    lib: ["ESNext", "DOM"],
   },
   entryPoints: ["./mod.ts"],
   outDir: "./npm",
@@ -45,8 +45,8 @@ await build({
       "types",
     ],
   },
-  typeCheck: true,
-  declaration: true,
+  typeCheck: "both",
+  declaration: "inline",
 });
 
 Deno.copyFileSync("LICENSE", "npm/LICENSE");
