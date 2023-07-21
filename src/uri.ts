@@ -289,20 +289,19 @@ namespace Uri {
         if (rawPath.startsWith("/") === true) {
           if (rawPath === "/") {
             //segments = [];
-          }
-          else {
+          } else {
             segments = rawPath.substring(1).split("/");
           }
-        }
-        else {
+        } else {
           segments = rawPath.split("/");
         }
-      }
-      else {
+      } else {
         segments = [this.rawPath];
       }
 
-      const bytesArray: Array<Uint8Array> = segments.map((s) => Percent.decode(s));
+      const bytesArray: Array<Uint8Array> = segments.map((s) =>
+        Percent.decode(s)
+      );
       return bytesArray.map((b) => _utf8Decoder.decode(b));
     }
 
@@ -456,7 +455,7 @@ namespace Uri {
     }
 
     #isSpecial(): boolean {
-      return Absolute.#SpecialSchemes.includes(this.scheme);// this.schemeは、URLオブジェクトが小文字に正規化する
+      return Absolute.#SpecialSchemes.includes(this.scheme); // this.schemeは、URLオブジェクトが小文字に正規化する
     }
 
     // equals(): boolean {

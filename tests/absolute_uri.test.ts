@@ -170,7 +170,8 @@ Deno.test("Uri.Absolute.prototype.rawHost", () => {
   );
 
   assertStrictEquals(
-    Uri.Absolute.fromString("http://日本語ドメイン名ＥＸＡＭＰＬＥ.JP/abc").rawHost,
+    Uri.Absolute.fromString("http://日本語ドメイン名ＥＸＡＭＰＬＥ.JP/abc")
+      .rawHost,
     "xn--example-6q4fyliikhk162btq3b2zd4y2o.jp",
   );
   assertStrictEquals(
@@ -261,7 +262,8 @@ Deno.test("Uri.Absolute.prototype.host", () => {
   );
 
   assertStrictEquals(
-    Uri.Absolute.fromString("http://日本語ドメイン名ＥＸＡＭＰＬＥ.JP/abc").host,
+    Uri.Absolute.fromString("http://日本語ドメイン名ＥＸＡＭＰＬＥ.JP/abc")
+      .host,
     "日本語ドメイン名example.jp",
   );
   assertStrictEquals(
