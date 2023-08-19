@@ -17,7 +17,7 @@ This module delegates the URL parsing to the [`URL`](https://developer.mozilla.o
 ### npm
 
 ```console
-$ npm i @i-xi-dev/url@3.1.6
+$ npm i @i-xi-dev/url@3.1.7
 ```
 
 ```javascript
@@ -28,13 +28,13 @@ import { Uri } from "@i-xi-dev/url";
 
 Example for Skypack
 ```javascript
-import { Uri } from "https://cdn.skypack.dev/@i-xi-dev/url@3.1.6";
+import { Uri } from "https://cdn.skypack.dev/@i-xi-dev/url@3.1.7";
 ```
 
 
 ## Usage
 
-### [`Uri.Absolute`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/url.es/3.1.6/mod.ts/~/Uri.Absolute) class
+### [`Uri.Absolute`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/url.es/3.1.7/mod.ts/~/Uri.Absolute) class
 
 For URL rendering
 
