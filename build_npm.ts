@@ -15,7 +15,7 @@ await build({
   rootTestDir: "./tests",
   package: {
     name: "@i-xi-dev/url",
-    version: "3.1.9",
+    version: "3.1.10",
     description:
       "A JavaScript immutable object that represents the normalized absolute URL.",
     license: "MIT",
