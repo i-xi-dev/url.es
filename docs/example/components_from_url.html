@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>URL Parse</title>
+    <link href="./asset/base.css?3.1.11" rel="stylesheet" />
+    <script src="./asset/url_parse.mjs?3.1.11" type="module"></script>
+  </head>
+
+  <body>
+    <section>
+      <h1>Input</h1>
+
+      <dl>
+        <div>
+          <dt>[1]: URL</dt>
+          <dd>
+            <input id="i1" type="text" />
+          </dd>
+        </div>
+      </dl>
+    </section>
+
+    <section>
+      <h1>Output</h1>
+      <dl>
+        <div>
+          <dt>[2]: canonical form of [1]</dt>
+          <dd>
+            <output id="o0"></output>
+          </dd>
+        </div>
+        <div>
+          <dt>[3]: scheme of [1]</dt>
+          <dd>
+            <output id="o1"></output>
+          </dd>
+        </div>
+        <div>
+          <dt>[4]: host of [1]</dt>
+          <dd>
+            <output id="o2"></output>
+          </dd>
+        </div>
+        <div>
+          <dt>[5]: punycode decoded from [4]</dt>
+          <dd>
+            <output id="o3"></output>
+          </dd>
+        </div>
+        <div>
+          <dt>[6]: port of [1]</dt>
+          <dd>
+            <output id="o4"></output>
+          </dd>
+        </div>
+        <div>
+          <dt>[7]: path of [1]</dt>
+          <dd>
+            <output id="o5"></output>
+          </dd>
+        </div>
+        <div>
+          <dt>[8]: segments of [7]</dt>
+          <dd>
+            <output class="wrap" id="o6"></output>
+          </dd>
+        </div>
+        <div>
+          <dt>[9]: query of [1]</dt>
+          <dd>
+            <output id="o7"></output>
+          </dd>
+        </div>
+        <div>
+          <dt>[10]: parameters of [9]</dt>
+          <dd>
+            <output class="wrap" id="o8"></output>
+          </dd>
+        </div>
+        <div>
+          <dt>[11]: fragment of [1]</dt>
+          <dd>
+            <output id="o9"></output>
+          </dd>
+        </div>
+        <div>
+          <dt>[12]: percent decoded from [11]</dt>
+          <dd>
+            <output id="o10"></output>
+          </dd>
+        </div>
+      </dl>
+    </section>
+
+    <div class="progress">
+      <progress></progress>
+    </div>
+  </body>
+</html>

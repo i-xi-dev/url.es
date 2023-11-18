@@ -17,7 +17,7 @@ This module delegates the URL parsing to the [`URL`](https://developer.mozilla.o
 ### npm
 
 ```console
-$ npm i @i-xi-dev/url@3.1.10
+$ npm i @i-xi-dev/url@3.1.11
 ```
 
 ```javascript
@@ -26,15 +26,15 @@ import { Uri } from "@i-xi-dev/url";
 
 ### CDN
 
-Example for Skypack
+Example for UNPKG
 ```javascript
-import { Uri } from "https://cdn.skypack.dev/@i-xi-dev/url@3.1.10";
+import { Uri } from https://www.unpkg.com/@i-xi-dev/url@3.1.11/esm/mod.js;
 ```
 
 
 ## Usage
 
-### [`Uri.Absolute`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/url.es/3.1.10/mod.ts/~/Uri.Absolute) class
+### [`Uri.Absolute`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/url.es/3.1.11/mod.ts/~/Uri.Absolute) class
 
 For URL rendering
 
@@ -72,3 +72,7 @@ url.fragment;
 // → "素片"
 
 ```
+
+## Examples
+
+- [URL parse from string](https://i-xi-dev.github.io/url.es/example/components_from_url.html)

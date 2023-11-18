@@ -1,0 +1,55 @@
+*.progress {
+  align-items: center;
+  background-color: #ccc;
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  position: fixed;
+  z-index: 10000;
+}
+
+*.progress[hidden] {
+  display: none;
+}
+
+dd {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: stretch;
+}
+
+output {
+  background-color: #eee;
+  display: block;
+  min-height: 1lh;
+  user-select: contain;
+  white-space: nowrap;
+}
+
+output:empty {
+  background-color: #ccc;
+}
+
+input[type="checkbox"] {
+  align-self: start;
+}
+
+output.wrap {
+  box-sizing: border-box;
+  column-gap: 1ch;
+  display: flex;
+  flex-flow: row wrap;
+  padding: 0.5ch 0.75ch;
+  row-gap: 0.5ch;
+}
+output > span {
+  background-color: #bbbaf4;
+  border-radius: 0.25em;
+  padding: 0 0.5ch;
+  white-space: pre;
+}
+output > span > span {
+  border-left: 2px solid #eeea;
+  margin-left: 0.5ch;
+  padding-left: 0.5ch;
+}
