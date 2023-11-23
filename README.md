@@ -28,7 +28,7 @@ import { Uri } from "@i-xi-dev/url";
 
 Example for UNPKG
 ```javascript
-import { Uri } from https://www.unpkg.com/@i-xi-dev/url@3.1.11/esm/mod.js;
+import { Uri } from "https://www.unpkg.com/@i-xi-dev/url@3.1.11/esm/mod.js";
 ```
 
 
