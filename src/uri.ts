@@ -646,6 +646,4 @@ namespace Uri {
   }
 }
 
-Object.freeze(Uri);
-
 export { Uri };
