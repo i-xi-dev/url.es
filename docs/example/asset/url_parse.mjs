@@ -1,5 +1,5 @@
-import { Uri } from "https://www.unpkg.com/@i-xi-dev/url@3.1.11/esm/mod.js";
-// https://cdn.skypack.dev/@i-xi-dev/url@3.1.11
+import { Uri } from "https://www.unpkg.com/@i-xi-dev/url@3.1.12/esm/mod.js";
+// https://cdn.skypack.dev/@i-xi-dev/url@3.1.12
 
 const i1 = document.getElementById("i1");
 const o0 = document.getElementById("o0");
