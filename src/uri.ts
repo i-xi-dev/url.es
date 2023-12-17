@@ -1,4 +1,4 @@
-import { NonNegativeInteger, Percent } from "../deps.ts";
+import { Percent, SafeInteger } from "../deps.ts";
 import { _PunycodeDecoder } from "./punycode.ts";
 
 function _isUriQueryParameter(value: unknown): value is Uri.QueryParameter {
@@ -262,8 +262,8 @@ namespace Uri {
       }
 
       const defaultPort = Absolute.#DefaultPortMap.get(this.scheme);
-      if (NonNegativeInteger.isNonNegativeInteger(defaultPort)) {
-        return defaultPort;
+      if (SafeInteger.isNonNegative(defaultPort)) {
+        return defaultPort as SafeInteger;
       }
       return Number.NaN;
     }

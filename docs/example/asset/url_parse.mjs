@@ -40,7 +40,7 @@ i1.addEventListener("input", () => {
     o4.value = Number.isSafeInteger(port) ? port.toString(10) : "";
     o5.value = url.rawPath;
     const path = url.path;
-    if (path.length > 0) {//if (path.join("") !== url.rawPath) {
+    if (path.length > 0) { //if (path.join("") !== url.rawPath) {
       path.forEach((s) => {
         const se = document.createElement("span");
         se.textContent = s;
@@ -61,11 +61,9 @@ i1.addEventListener("input", () => {
     }
     o9.value = url.rawFragment;
     o10.value = url.fragment;
-  }
-  catch {
+  } catch {
     //
   }
-
-}, {passive:true});
+}, { passive: true });
 
 document.querySelector("*.progress").hidden = true;
