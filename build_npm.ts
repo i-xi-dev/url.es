@@ -1,4 +1,4 @@
-import { build, emptyDir } from "https://deno.land/x/dnt@0.38.1/mod.ts";
+import { build, emptyDir } from "https://deno.land/x/dnt@0.39.0/mod.ts";
 
 await emptyDir("./npm");
 
@@ -15,7 +15,7 @@ await build({
   rootTestDir: "./tests",
   package: {
     name: "@i-xi-dev/url",
-    version: "3.1.13",
+    version: "3.1.14",
     description:
       "A JavaScript immutable object that represents the normalized absolute URL.",
     license: "MIT",

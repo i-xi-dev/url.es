@@ -1,9 +1,9 @@
-type int = number;
+import { SafeInteger } from "../deps.ts";
 
 /**
  * @internal
  */
-namespace _PunycodeDecoder {
+export namespace _PunycodeDecoder {
   // RFC 3492のデコーダーのみ実装
   // URL#hostnameをデコードしたかっただけなので、正しくエンコードされた文字列のデコードのみ対応（オーバーフロー検出などは省いている）
 
@@ -21,10 +21,14 @@ namespace _PunycodeDecoder {
   /**
    * Implements https://datatracker.ietf.org/doc/html/rfc3492#section-6.1
    */
-  function _adaptBias(delta: int, numpoints: int, firsttime: boolean): int {
+  function _adaptBias(
+    delta: SafeInteger,
+    numpoints: SafeInteger,
+    firsttime: boolean,
+  ): SafeInteger {
     delta = Math.trunc(delta / ((firsttime === true) ? _DAMP : 2));
     delta = delta + Math.trunc(delta / numpoints);
-    let k: int;
+    let k: SafeInteger;
     for (
       k = 0;
       delta > Math.trunc(_BASE_MINUS_TMIN * _TMAX / 2);
@@ -59,7 +63,7 @@ namespace _PunycodeDecoder {
 
       for (let k = _BASE; k < Number.MAX_SAFE_INTEGER; k = k + _BASE) {
         const { value, done } = digitIterator.next();
-        let digit: int;
+        let digit: SafeInteger;
         if (value && (done !== true)) {
           digit = value.digit;
           doLoopEnd = value.isLast === true;
@@ -124,7 +128,7 @@ namespace _PunycodeDecoder {
   }
 
   type _DigitIteratorResult = {
-    digit: int;
+    digit: SafeInteger;
     isLast: boolean;
   };
 
@@ -133,16 +137,16 @@ namespace _PunycodeDecoder {
   ): Generator<_DigitIteratorResult, void, void> {
     const codepoints = [...extendedString].map((char) => char.charCodeAt(0));
 
-    let i: int;
+    let i: SafeInteger;
     for (i = 0; i < codepoints.length; i++) {
       yield {
-        digit: _digitValueOf(codepoints[i] as int),
+        digit: _digitValueOf(codepoints[i] as SafeInteger),
         isLast: (i === (codepoints.length - 1)),
       };
     }
   }
 
-  function _digitValueOf(codepoint: int): int {
+  function _digitValueOf(codepoint: SafeInteger): SafeInteger {
     // a-z
     if (codepoint >= 0x61 && codepoint <= 0x7A) {
       return codepoint - 0x61;
@@ -152,7 +156,7 @@ namespace _PunycodeDecoder {
     return codepoint - 0x16;
   }
 
-  function _computeThreshold(k: int, bias: int): int {
+  function _computeThreshold(k: SafeInteger, bias: SafeInteger): SafeInteger {
     if (k <= bias) {
       return _TMIN;
     } else if (k >= (bias + _TMAX)) {
@@ -161,7 +165,3 @@ namespace _PunycodeDecoder {
     return k - bias;
   }
 }
-
-Object.freeze(_PunycodeDecoder);
-
-export { _PunycodeDecoder };

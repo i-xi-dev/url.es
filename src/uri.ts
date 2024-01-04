@@ -19,6 +19,7 @@ const _NULL_ORIGIN = "null";
 
 const _utf8Decoder = new TextDecoder();
 
+//TODO Uriはclassと、namespaceにする
 namespace Uri {
   export const Scheme = {
     BLOB: "blob",
@@ -262,7 +263,7 @@ namespace Uri {
       }
 
       const defaultPort = Absolute.#DefaultPortMap.get(this.scheme);
-      if (SafeInteger.isNonNegative(defaultPort)) {
+      if (SafeInteger.isNonNegativeSafeInteger(defaultPort)) {
         return defaultPort as SafeInteger;
       }
       return Number.NaN;
