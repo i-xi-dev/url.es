@@ -17,7 +17,7 @@ This module delegates the URL parsing to the [`URL`](https://developer.mozilla.o
 ### npm
 
 ```console
-$ npm i @i-xi-dev/url@3.1.18
+$ npm i @i-xi-dev/url@3.1.19
 ```
 
 ```javascript
@@ -28,13 +28,13 @@ import { Uri } from "@i-xi-dev/url";
 
 Example for UNPKG
 ```javascript
-import { Uri } from "https://www.unpkg.com/@i-xi-dev/url@3.1.18/esm/mod.js";
+import { Uri } from "https://www.unpkg.com/@i-xi-dev/url@3.1.19/esm/mod.js";
 ```
 
 
 ## Usage
 
-### [`Uri.Absolute`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/url.es/3.1.18/mod.ts/~/Uri.Absolute) class
+### [`Uri.Absolute`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/url.es/3.1.19/mod.ts/~/Uri.Absolute) class
 
 For URL rendering
 
